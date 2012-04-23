@@ -35,7 +35,7 @@ public class LinkedList {
    *
    * @throws FullListException if linked list is full
    */
-  public void isFull() throws FullListException {
+  public void isFull()  {
     if (counter > sizeList) {
       throw new FullListException();
     }
@@ -47,7 +47,7 @@ public class LinkedList {
    * @param element - node which will be added at the end of the linked list
    * @throws FullListException if linked list is full
    */
-  public void add(Object element) throws FullListException {
+  public void add(Object element) {
 
     isFull();
     if (isEmpty()) // firstNode and lastNode refer to same Object
@@ -63,11 +63,11 @@ public class LinkedList {
   /**
    * Removes last node of the linked list
    *
-   * @throws EmptyListException if the list is empty
+   * @throws EmptyListRemoveException if the list is empty
    */
-  public void remove() throws EmptyListException {
+  public void remove() {
     if (isEmpty()) {
-      throw new EmptyListException();
+      throw new EmptyListRemoveException();
     }
     Object removedItem = lastNode.data;
     if (firstNode == lastNode) {
@@ -87,11 +87,10 @@ public class LinkedList {
    */
   public void printAllElements() {
     if (isEmpty()) {
-      System.out.printf("Empty list!\n");
+      System.out.printf("Empty list! Nothing to print.\n");
       return;
     }
     ListNode current = firstNode;
-    // while not at end of list, output current node's data
     while (current != null) {
       System.out.printf("%s\n", current.data);
       current = current.next;

@@ -3,8 +3,8 @@ package com.clouway.exceptions;
 /**
  * @author Grisha Angelov <grisha.angelov@clouway.com>
  */
-public class FullListException extends Exception {
+public class FullListException extends RuntimeException {
   public FullListException() {
-    super("List is full!");
+    super("You are trying to add a new node on an already full linked list!");
   }
 }
