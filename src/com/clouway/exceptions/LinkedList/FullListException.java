@@ -1,4 +1,4 @@
-package com.clouway.exceptions;
+package com.clouway.exceptions.LinkedList;
 
 /**
  * @author Grisha Angelov <grisha.angelov@clouway.com>

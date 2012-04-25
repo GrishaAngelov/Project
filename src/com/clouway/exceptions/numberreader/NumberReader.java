@@ -1,4 +1,4 @@
-package com.clouway.numberreader;
+package com.clouway.exceptions.numberreader;
 
 import java.util.Scanner;
 

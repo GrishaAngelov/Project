@@ -1,4 +1,4 @@
-package com.clouway.exceptions;
+package com.clouway.exceptions.LinkedList;
 
 /**
  * @author Grisha Angelov <grisha.angelov@clouway.com>
@@ -69,7 +69,7 @@ public class LinkedList {
     if (isEmpty()) {
       throw new EmptyListRemoveException();
     }
-    Object removedItem = lastNode.data;
+    Object removedItem = lastNode.getData();
     if (firstNode == lastNode) {
       firstNode = lastNode = null;
     } else {
@@ -92,7 +92,7 @@ public class LinkedList {
     }
     ListNode current = firstNode;
     while (current != null) {
-      System.out.printf("%s\n", current.data);
+      System.out.printf("%s\n", current.getData());
       current = current.next;
     }
     System.out.println();

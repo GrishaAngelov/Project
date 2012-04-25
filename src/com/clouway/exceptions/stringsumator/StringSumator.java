@@ -1,4 +1,4 @@
-package com.clouway.stringsumator;
+package com.clouway.exceptions.stringsumator;
 
 /**
  * @author Grisha Angelov <grisha.angelov@clouway.com>
