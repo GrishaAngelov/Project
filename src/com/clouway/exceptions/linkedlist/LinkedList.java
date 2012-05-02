@@ -1,4 +1,4 @@
-package com.clouway.exceptions.LinkedList;
+package com.clouway.exceptions.linkedlist;
 
 /**
  * @author Grisha Angelov <grisha.angelov@clouway.com>
@@ -26,7 +26,7 @@ public class LinkedList {
    *
    * @return 'true' if linked list is empty or 'false' if it isn't empty
    */
-  public boolean isEmpty() {
+  private boolean isEmpty() {
     return firstNode == null;
   }
 
@@ -63,11 +63,11 @@ public class LinkedList {
   /**
    * Removes last node of the linked list
    *
-   * @throws EmptyListRemoveException if the list is empty
+   * @throws EmptyListException if the list is empty
    */
   public void remove() {
     if (isEmpty()) {
-      throw new EmptyListRemoveException();
+      throw new EmptyListException();
     }
     Object removedItem = lastNode.getData();
     if (firstNode == lastNode) {
@@ -85,14 +85,14 @@ public class LinkedList {
   /**
    * Prints all elements (nodes) in the linked list
    */
-  public void printAllElements() {
-    if (isEmpty()) {
-      System.out.printf("Empty list! Nothing to print.\n");
-      return;
-    }
+  public void printAllElements(Display display) {
+//    if (isEmpty()) {
+//      System.out.printf("Empty list! Nothing to print.\n");
+//      return;
+//    }
     ListNode current = firstNode;
     while (current != null) {
-      System.out.printf("%s\n", current.getData());
+      display.write(String.format("%s\n", current.getData()));
       current = current.next;
     }
     System.out.println();
