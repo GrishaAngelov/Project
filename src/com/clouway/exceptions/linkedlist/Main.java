@@ -17,11 +17,11 @@ public class Main {
   public static void main(String[] args) {
     try {
     LinkedList list = new LinkedList(3);
-//    list.add(new Integer(5));
-//    list.add(new String("str"));
-//    list.add(new Integer(6));
-//    list.printAllElements();
     list.add(new Integer(5));
+    list.add(new String("str"));
+    list.add(new Integer(6));
+//    list.printAllElements();
+
 //    list.remove();
       
       ConsoleDisplay display = new ConsoleDisplay();
