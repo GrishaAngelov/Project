@@ -51,19 +51,15 @@ public class Main {
             System.out.println("Current Page: " + pageBean.getCurrentPageNumber());
           }
         } else if (input.equals("f")) {
-          try {
-            System.out.println(pageBean.firstPage());
-            System.out.println("Current Page: " + pageBean.getCurrentPageNumber());
-          } catch (OutOfBoundsException e) {
-            System.out.println(e.getMessage());
-          }
+
+          System.out.println(pageBean.firstPage());
+          System.out.println("Current Page: " + pageBean.getCurrentPageNumber());
+
         } else if (input.equals("l")) {
-          try {
-            System.out.println(pageBean.lastPage());
-            System.out.println("Current Page: " + pageBean.getCurrentPageNumber());
-          } catch (OutOfBoundsException e) {
-            System.out.println(e.getMessage());
-          }
+
+          System.out.println(pageBean.lastPage());
+          System.out.println("Current Page: " + pageBean.getCurrentPageNumber());
+
         } else {
           System.out.println("Incorrect input!");
         }
