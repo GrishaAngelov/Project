@@ -29,42 +29,53 @@ public class Main {
     System.out.println("Enter\n\"n\" for next page\n\"p\" for previous page\n\"f\" for first page\n\"l\" for last page\nTo quit enter \"q\".\n");
     System.out.println(pageBean.next());
     System.out.println("Current Page: " + pageBean.getCurrentPageNumber());
+    System.out.println("hasNext: " + pageBean.hasNext());
+    System.out.println("hasPrevious: " + pageBean.hasPrevious());
 
     System.out.print("Enter command: ");
-    String input = scanner.nextLine();
+    char input = scanner.next().charAt(0);
     try {
-      while (!(input.equals("q"))) {
-        if (input.equals("n")) {
-          try {
-            System.out.println(pageBean.next());
+      while (input != 'q') {
+        switch (input) {
+          case 'n':
+            try {
+              System.out.println(pageBean.next());
+              System.out.println("Current Page: " + pageBean.getCurrentPageNumber());
+              System.out.println("hasNext: " + pageBean.hasNext());
+              System.out.println("hasPrevious: " + pageBean.hasPrevious());
+            } catch (OutOfBoundsException e) {
+              System.out.println(e.getMessage());
+              System.out.println("Current Page: " + pageBean.getCurrentPageNumber());
+            }
+            break;
+          case 'p':
+            try {
+              System.out.println(pageBean.previous());
+              System.out.println("Current Page: " + pageBean.getCurrentPageNumber());
+              System.out.println("hasNext: " + pageBean.hasNext());
+              System.out.println("hasPrevious: " + pageBean.hasPrevious());
+            } catch (OutOfBoundsException e) {
+              System.out.println(e.getMessage());
+              System.out.println("Current Page: " + pageBean.getCurrentPageNumber());
+            }
+            break;
+          case 'f':
+            System.out.println(pageBean.firstPage());
             System.out.println("Current Page: " + pageBean.getCurrentPageNumber());
-          } catch (OutOfBoundsException e) {
-            System.out.println(e.getMessage());
+            System.out.println("hasNext: " + pageBean.hasNext());
+            System.out.println("hasPrevious: " + pageBean.hasPrevious());
+            break;
+          case 'l':
+            System.out.println(pageBean.lastPage());
             System.out.println("Current Page: " + pageBean.getCurrentPageNumber());
-          }
-        } else if (input.equals("p")) {
-          try {
-            System.out.println(pageBean.previous());
-            System.out.println("Current Page: " + pageBean.getCurrentPageNumber());
-          } catch (OutOfBoundsException e) {
-            System.out.println(e.getMessage());
-            System.out.println("Current Page: " + pageBean.getCurrentPageNumber());
-          }
-        } else if (input.equals("f")) {
-
-          System.out.println(pageBean.firstPage());
-          System.out.println("Current Page: " + pageBean.getCurrentPageNumber());
-
-        } else if (input.equals("l")) {
-
-          System.out.println(pageBean.lastPage());
-          System.out.println("Current Page: " + pageBean.getCurrentPageNumber());
-
-        } else {
-          System.out.println("Incorrect input!");
+            System.out.println("hasNext: " + pageBean.hasNext());
+            System.out.println("hasPrevious: " + pageBean.hasPrevious());
+            break;
+          default:
+            System.out.println("Incorrect input!");
         }
         System.out.print("Enter command: ");
-        input = scanner.next();
+        input = scanner.next().charAt(0);
       }
     } finally {
       scanner.close();

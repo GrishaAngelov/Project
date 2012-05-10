@@ -14,6 +14,8 @@ public class PageBean<T> {
   private int totalPages;
   private int index = 0;
   private int current = 0;
+  private boolean hasNext;
+  private boolean hasPrevious;
 
   public PageBean(List list, int pageSize) {
     itemList = list;
@@ -72,5 +74,21 @@ public class PageBean<T> {
     pageList = itemList.subList(index, itemList.size());
     currentPage = totalPages;
     return pageList;
+  }
+
+  public boolean hasNext() {
+    hasNext = true;
+    if (currentPage == totalPages) {
+      hasNext = false;
+    }
+     return  hasNext;
+  }
+
+  public boolean hasPrevious() {
+    hasPrevious = true;
+    if(currentPage == 1){
+      hasPrevious = false;
+    }
+    return hasPrevious;
   }
 }
