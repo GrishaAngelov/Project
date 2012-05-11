@@ -16,6 +16,7 @@ public class Main {
 
       System.out.println("\nall error messages:");
       System.out.println(manager.getErrorMessages());
+
     } catch (DuplicateCombinationException e) {
       System.out.println(e.getMessage());
     } catch (KeyNotFoundException e) {
