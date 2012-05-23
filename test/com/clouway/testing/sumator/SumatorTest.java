@@ -18,17 +18,27 @@ public class SumatorTest {
   }
 
   @Test
-  public void testSum() {
+  public void testSumOfIntegerNumbers() {
     assertEquals("8.0", sumator.sum("5", "3"));
+  }
+
+  @Test
+  public void testSumOfDoubleNumbers() {
+    assertEquals("10.0", sumator.sum("7.3", "2.7"));
+  }
+
+  @Test
+  public void testSumOfZeros() {
+    assertEquals("0.0", sumator.sum("0", "0"));
   }
 
   @Test(expected = NumberFormatException.class)
   public void testSumWithIncorrectValue() {
-    assertEquals("8.0", sumator.sum("asd", "3"));
+    sumator.sum("asd", "3");
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void testSumWithNullArgument(){
-    assertEquals("8.0", sumator.sum(null, "3"));
+    sumator.sum(null, "3");
   }
 }

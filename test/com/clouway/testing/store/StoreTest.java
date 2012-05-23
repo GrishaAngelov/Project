@@ -31,7 +31,7 @@ public class StoreTest {
   @Test
   public void testAddProduct() {
     store.addProduct(product);
-    assertEquals(1, store.getProductList().size());
+    assertEquals(1, store.getProductListSize());
   }
 
   @Test(expected = DuplicateProductException.class)

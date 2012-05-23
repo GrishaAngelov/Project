@@ -38,10 +38,10 @@ public class ArrayUtil {
   }
 
   /**
-   * Prints all elements
+   * Returns all elements from the array as string
    * @return
    */
-  public String printArray(){
+  public String getArrayElements(){
    StringBuilder sb = new StringBuilder();
     for (int i = 0; i < myArray.length; i++){
       sb.append(myArray[i]+" ");

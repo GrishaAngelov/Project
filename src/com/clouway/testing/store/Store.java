@@ -17,59 +17,50 @@ public class Store {
 
   /**
    * Adds a product to the product list and checks whether it already exists
+   *
    * @param product
    */
   public void addProduct(Product product) {
-    if(!productList.contains(product)){
+    if (!productList.contains(product)) {
       productList.add(product);
-    }
-    else{
+    } else {
       throw new DuplicateProductException();
     }
   }
 
   /**
    * Sells a certain amount of product
+   *
    * @param quantity
    * @param product
    */
   public void sellProduct(int quantity, Product product) {
-    if(!productList.isEmpty()){
+    if (!productList.isEmpty()) {
       product.sellQuantity(quantity);
-    }
-    else {
+    } else {
       throw new LackOfProductException();
     }
   }
 
   /**
-   * Returns the list of products
-   * @return  list of products
+   * Returns the size of the product list
+   *
+   * @return size
    */
-  public List<Product> getProductList() {
-    return productList;
+  public int getProductListSize() {
+    return productList.size();
   }
 
   /**
-   * Sorts product list by price
+   * Returns sorted by price product list
    */
-  public void sortProductByPrice() {
+  public List getSortedByPriceProductList() {
     Collections.sort(productList, new Comparator<Product>() {
       @Override
       public int compare(Product product, Product product1) {
         return product.getProductPrice().compareTo(product1.getProductPrice());
       }
     });
-  }
-
-  /**
-   * Prints sorted products
-   */
-  public void printStoreProducts() {
-    System.out.println("\n-------Store Products Sorted by Price-------");
-    for (Product productItem : productList) {
-      System.out.printf("product name: %s\nprice: %s\n\n", productItem.getProductName(), productItem.getProductPrice());
-    }
+    return productList;
   }
 }
-

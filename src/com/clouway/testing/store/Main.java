@@ -17,12 +17,10 @@ public class Main {
 
     Product p1 = new Product("orange guice", 10, new BigDecimal("15.99"));
     store.addProduct(p1);
-    System.out.printf("initial quantity of %s: %d\n",
-            p1.getProductName(), p1.getCurrentQuantity());
+    System.out.printf("initial quantity of %s: %d\n", p1.getProductName(), p1.getCurrentQuantity());
     store.sellProduct(5, p1);
     System.out.printf("product name: %s(%s lv)\ncurrent quantity: %d\n\n",
             p1.getProductName(), p1.getProductPrice(), p1.getCurrentQuantity());
-
 
     Product p2 = new Product("pizza", 15, new BigDecimal("5.50"));
     store.addProduct(p2);
@@ -38,7 +36,10 @@ public class Main {
 //    System.out.printf("product name: %s(%s)\ncurrent quantity: %d\n",
 //            p3.getProductName(),p3.getProductPrice(), p3.getCurrentQuantity());
 
-    store.sortProductByPrice();
-    store.printStoreProducts();
+    List<Product> mySortedProductList = store.getSortedByPriceProductList();
+    System.out.println("\n-------Store Products Sorted by Price-------");
+    for (Product productItem : mySortedProductList) {
+      System.out.printf("product name: %s\nprice: %s\n\n", productItem.getProductName(), productItem.getProductPrice());
+    }
   }
 }
