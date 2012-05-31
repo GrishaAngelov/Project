@@ -17,6 +17,7 @@ public class Product {
 
   /**
    * Constructor that initialize name, maximum quantity and price of the product
+   *
    * @param productName
    * @param maxQuantity
    * @param price
@@ -29,7 +30,17 @@ public class Product {
   }
 
   /**
+   * Add the given amount to the current quantity
+   *
+   * @param q
+   */
+  public void addQuantity(int q) {
+    currentQuantity += q;
+  }
+
+  /**
    * Perform selling by removing the given amount from the current quantity
+   *
    * @param q
    */
   public void sellQuantity(int q) {
@@ -42,7 +53,6 @@ public class Product {
   }
 
   /**
-   *
    * @return current quantity of product
    */
   public int getCurrentQuantity() {
@@ -50,20 +60,16 @@ public class Product {
   }
 
   /**
-   *
-   * @return  name of the product
+   * @return name of the product
    */
   public String getProductName() {
     return productName;
   }
 
   /**
-   *
    * @return price of the product
    */
   public BigDecimal getProductPrice() {
     return price;
   }
-
-
 }

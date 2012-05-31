@@ -18,14 +18,19 @@ public class Main {
     Product p1 = new Product("orange guice", 10, new BigDecimal("15.99"));
     store.addProduct(p1);
     System.out.printf("initial quantity of %s: %d\n", p1.getProductName(), p1.getCurrentQuantity());
-    store.sellProduct(5, p1);
+    System.out.println("sell 5");
+    store.sellProductQuantity(5, p1);
+    System.out.printf("product name: %s(%s lv)\ncurrent quantity: %d\n",
+            p1.getProductName(), p1.getProductPrice(), p1.getCurrentQuantity());
+    System.out.println("add 3");
+    p1.addQuantity(3);
     System.out.printf("product name: %s(%s lv)\ncurrent quantity: %d\n\n",
             p1.getProductName(), p1.getProductPrice(), p1.getCurrentQuantity());
+
 
     Product p2 = new Product("pizza", 15, new BigDecimal("5.50"));
     store.addProduct(p2);
     System.out.printf("initial quantity of %s: %d\n", p2.getProductName(), p2.getCurrentQuantity());
-    store.sellProduct(15, p2);
     System.out.printf("product name: %s(%s lv)\ncurrent quantity: %d\n",
             p2.getProductName(), p2.getProductPrice(), p2.getCurrentQuantity());
 

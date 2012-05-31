@@ -25,47 +25,67 @@ public class StoreTest {
 
   @Before
   public void createProduct() {
-    product = new Product("apples", 10, new BigDecimal("2.99"));
+    product = new Product("apples", 10, new BigDecimal("20.99"));
   }
 
   @Test
   public void testAddProduct() {
     store.addProduct(product);
-    assertEquals(1, store.getProductListSize());
+    assertEquals(1, productList.size());
   }
 
   @Test(expected = DuplicateProductException.class)
-  public void testAddDuplicateProduct() {
+  public void testProductDuplicationIsNotAllowed() {
     store.addProduct(product);
     store.addProduct(product);
-//
-//    Product p = new Product("apples", 10, new BigDecimal("2.99"));
-//    store.addProduct(p);
   }
 
   @Test
-  public void testSellSomeProducts() {
+  public void testAddProductQuantity() {
     store.addProduct(product);
-    store.sellProduct(2, product);
+    store.addProductQuantity(2, product);
+    assertEquals(12, product.getCurrentQuantity());
+  }
+
+  @Test(expected = LackOfProductException.class)
+  public void testAddQuantityToNotAvailableProduct() {
+    store.addProductQuantity(2, product);
+  }
+
+  @Test
+  public void testSellSomeQuantityOfProduct() {
+    store.addProduct(product);
+    store.sellProductQuantity(2, product);
     assertEquals(8, product.getCurrentQuantity());
   }
 
   @Test
-  public void testSellEntireProducts() {
+  public void testSellEntireQuantityOfProduct() {
     store.addProduct(product);
-    store.sellProduct(10, product);
+    store.sellProductQuantity(10, product);
     assertEquals(0, product.getCurrentQuantity());
   }
 
   @Test(expected = LackOfProductException.class)
-  public void testSellMoreThanYouHave() {
+  public void testSellMoreQuantityThanYouHave() {
     store.addProduct(product);
-    store.sellProduct(15, product);
+    store.sellProductQuantity(15, product);
     assertEquals(-5, product.getCurrentQuantity());
   }
 
-  @Test (expected = LackOfProductException.class)
-  public void testSellNotAvailableProduct(){
-    store.sellProduct(5,product);
+  @Test(expected = LackOfProductException.class)
+  public void testSellQuantityFromNotAvailableProduct() {
+    store.sellProductQuantity(5, product);
+  }
+
+  @Test
+  public void testSortingByPrice(){
+    store.addProduct(product);
+    Product expensiveProduct = new Product("Chocolate",10,new BigDecimal("12.50"));
+    store.addProduct(expensiveProduct);
+    List<Product> productShelf = store.getSortedByPriceProductList();
+    double  priceFirstProduct = Double.parseDouble(productShelf.get(0).getProductPrice().toString());
+    double  priceSecondProduct = Double.parseDouble(productShelf.get(1).getProductPrice().toString());
+    assertTrue(priceFirstProduct < priceSecondProduct);
   }
 }

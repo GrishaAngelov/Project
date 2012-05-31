@@ -22,46 +22,53 @@ public class BookstoreTest {
   public void SetUp() {
     bookList = new HashMap<Long, Book>();
     bookStore = new Bookstore(bookList);
-    book = new Book("Ivan Vazov", "Pod Igoto", new BigDecimal("5.99"));
+    book = new Book("Ivan Vazov", "Pod Igoto", new BigDecimal("5.99"), 1056L, 10);
   }
 
   @Test
   public void testAddBook() {
-    bookStore.addBook(1056L, book);
+    bookStore.addBook(book);
     assertEquals(1, bookStore.getBookStoreSize());
   }
 
   @Test(expected = DuplicateBookException.class)
-  public void testAddSameBookTwice() {
-    bookStore.addBook(1056L, book);
-    bookStore.addBook(1056L, book);
+  public void testBookDuplicationIsNotAllowed() {
+    bookStore.addBook(book);
+    bookStore.addBook(book);
   }
 
   @Test(expected = DuplicateBookException.class)
   public void testAddDuplicateBook() {
-    bookStore.addBook(1056L, book);
-    Book duplicateBook = new Book("Ivan Vazov", "Pod Igoto", new BigDecimal("5.99"));
-    bookStore.addBook(1056L, duplicateBook);
+    bookStore.addBook(book);
+    Book duplicateBook = new Book("Ivan Vazov", "Pod Igoto", new BigDecimal("5.99"), 1056L, 1);
+    bookStore.addBook(duplicateBook);
   }
 
   @Test(expected = DuplicateBookException.class)
-  public void testAddDifferentBookWithSameIsbn(){
-    bookStore.addBook(1056L,book);
-    Book duplicateIsbnBook = new Book("Shakespeare", "Hamlet", new BigDecimal("25.99"));
-    bookStore.addBook(1056L,duplicateIsbnBook);
-  }
-
-  @Test(expected = DuplicateBookException.class)
-  public void testAddDuplicateBookWithDifferentIsbn(){
-    bookStore.addBook(1056L,book);
-    Book duplicateBook = new Book("Ivan Vazov", "Pod Igoto", new BigDecimal("5.99"));
-    bookStore.addBook(6845L, duplicateBook);
+  public void testAddDifferentBookWithSameIsbn() {
+    bookStore.addBook(book);
+    Book duplicateIsbnBook = new Book("Shakespeare", "Hamlet", new BigDecimal("25.99"), 1056L, 1);
+    bookStore.addBook(duplicateIsbnBook);
   }
 
   @Test
   public void testAddEmptyBook() {
-    Book myBook = new Book(null, null, null);
-    bookStore.addBook(null, myBook);
+    Book myBook = new Book(null, null, null, null, 0);
+    bookStore.addBook(myBook);
     assertEquals(1, bookStore.getBookStoreSize());
+  }
+
+  @Test
+  public void testAddQuantityOfBook() {
+    bookStore.addBook(book);
+    bookStore.addBookQuantity(9,book);
+    assertEquals(19, book.getQuantity());
+  }
+
+  @Test
+  public void testSellQuantityOfBook() {
+    bookStore.addBook(book);
+    bookStore.sellBookQuantity(9,book);
+    assertEquals(1, book.getQuantity());
   }
 }

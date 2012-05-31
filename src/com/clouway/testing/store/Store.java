@@ -29,12 +29,26 @@ public class Store {
   }
 
   /**
+   * Add a certain amount of product
+   *
+   * @param quantity
+   * @param product
+   */
+  public void addProductQuantity(int quantity, Product product) {
+    if (!productList.isEmpty()) {
+      product.addQuantity(quantity);
+    } else {
+      throw new LackOfProductException();
+    }
+  }
+
+  /**
    * Sells a certain amount of product
    *
    * @param quantity
    * @param product
    */
-  public void sellProduct(int quantity, Product product) {
+  public void sellProductQuantity(int quantity, Product product) {
     if (!productList.isEmpty()) {
       product.sellQuantity(quantity);
     } else {
@@ -42,14 +56,6 @@ public class Store {
     }
   }
 
-  /**
-   * Returns the size of the product list
-   *
-   * @return size
-   */
-  public int getProductListSize() {
-    return productList.size();
-  }
 
   /**
    * Returns sorted by price product list

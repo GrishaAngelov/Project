@@ -12,12 +12,20 @@ public class Bookstore {
     this.bookStore = bookStore;
   }
 
-  public void addBook(Long isbn, Book book) {
-    if (!bookStore.containsKey(isbn) && !bookStore.containsValue(book)) {
-      bookStore.put(isbn, book);
+  public void addBook(Book book) {
+    if (!bookStore.containsKey(book.getIsbn()) && !bookStore.containsValue(book)) {
+      bookStore.put(book.getIsbn(), book);
     } else {
       throw new DuplicateBookException();
     }
+  }
+
+  public void addBookQuantity(int quantity,Book book){
+    book.addQuantity(quantity);
+  }
+
+  public void sellBookQuantity(int quantity,Book book){
+    book.sellQuantity(quantity);
   }
 
   public int getBookStoreSize() {
