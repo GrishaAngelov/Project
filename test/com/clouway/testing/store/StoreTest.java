@@ -79,13 +79,13 @@ public class StoreTest {
   }
 
   @Test
-  public void testSortingByPrice(){
+  public void testSortingByPrice() {
     store.addProduct(product);
-    Product expensiveProduct = new Product("Chocolate",10,new BigDecimal("12.50"));
+    Product expensiveProduct = new Product("Chocolate", 10, new BigDecimal("12.50"));
     store.addProduct(expensiveProduct);
     List<Product> productShelf = store.getSortedByPriceProductList();
-    double  priceFirstProduct = Double.parseDouble(productShelf.get(0).getProductPrice().toString());
-    double  priceSecondProduct = Double.parseDouble(productShelf.get(1).getProductPrice().toString());
+    double priceFirstProduct = Double.parseDouble(productShelf.get(0).getProductPrice().toString());
+    double priceSecondProduct = Double.parseDouble(productShelf.get(1).getProductPrice().toString());
     assertTrue(priceFirstProduct < priceSecondProduct);
   }
 }
