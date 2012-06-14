@@ -6,7 +6,7 @@ package com.clouway.threads.incrementthread;
 public class ThreadIncrementor {
   private int counter = 0;
 
-  public synchronized void incermet(){
+  public synchronized void increment(){
     counter++;
   }
 
@@ -15,7 +15,7 @@ public class ThreadIncrementor {
       @Override
       public void run() {
         for (int i = 0; i < 100000; i++) {
-          incermet();
+          increment();
         }
       }
     });
@@ -25,7 +25,7 @@ public class ThreadIncrementor {
       @Override
       public void run() {
         for (int i = 0; i < 100000; i++) {
-          incermet();
+          increment();
         }
       }
     });
