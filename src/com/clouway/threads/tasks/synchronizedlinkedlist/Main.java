@@ -1,7 +1,7 @@
 package com.clouway.threads.tasks.synchronizedlinkedlist;
 
 /**
- * Created by Grisha Angelov <grisha.angelov@clouway.com>
+ * @author  Grisha Angelov <grisha.angelov@clouway.com>
  */
 public class Main {
 
@@ -13,7 +13,7 @@ public class Main {
 
     AddingThread addingThread1 = new AddingThread(list, consoleDisplay, 5);
     AddingThread addingThread2 = new AddingThread(list, consoleDisplay, 3);
-    AddingThread addingThread3 = new AddingThread(list, consoleDisplay, 6);
+    AddingThread addingThread3 = new AddingThread(list, consoleDisplay, "str");
     RemovingThread removingThread1 = new RemovingThread(list);
 
     Thread firstAddingThread = new Thread(addingThread1);

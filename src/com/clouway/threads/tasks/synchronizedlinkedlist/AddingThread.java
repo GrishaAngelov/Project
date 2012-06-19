@@ -1,23 +1,23 @@
 package com.clouway.threads.tasks.synchronizedlinkedlist;
 
 /**
- * Created by Grisha Angelov <grisha.angelov@clouway.com>
+ * @author  Grisha Angelov <grisha.angelov@clouway.com>
  */
 public class AddingThread implements Runnable {
 
   private LinkedList list;
-  private int value;
+  private Object object;
   private ConsoleDisplay consoleDisplay;
 
-  public AddingThread(LinkedList list, ConsoleDisplay consoleDisplay, int value) {
+  public AddingThread(LinkedList list, ConsoleDisplay consoleDisplay, Object object) {
     this.list = list;
-    this.value = value;
+    this.object = object;
     this.consoleDisplay = consoleDisplay;
   }
 
   public synchronized void run() {
     try {
-      list.add(value);
+      list.add(object);
       System.out.println("printing all elements");
       list.printAllElements(consoleDisplay);
       Thread.sleep(200);

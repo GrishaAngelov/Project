@@ -1,9 +1,10 @@
 package com.clouway.threads.tasks.synchronizedlinkedlist;
 
+import java.util.Random;
 import java.util.Scanner;
 
 /**
- * Created by Grisha Angelov <grisha.angelov@clouway.com>
+ * @author  Grisha Angelov <grisha.angelov@clouway.com>
  */
 public class LinkedList {
 
@@ -11,8 +12,7 @@ public class LinkedList {
   private ListNode lastNode;
   private int sizeList = 0;
   private int counter = 0;
-  private Scanner scanner = new Scanner(System.in);
-  private Integer number;
+  private Random random = new Random();
 
   /**
    * Constructor that creates empty linked list with fixed size
@@ -39,8 +39,8 @@ public class LinkedList {
    */
   public synchronized void isFull() throws InterruptedException {
     if (counter > sizeList) {
+      System.out.println("list is full... removing last element");
       wait(500);
-//      System.out.println("list is full... removing last element");
     }
   }
 
@@ -70,11 +70,8 @@ public class LinkedList {
    * Removes last node of the linked list
    */
   public synchronized void remove() throws InterruptedException {
-    System.out.println("list is full... removing last element");
     if (isEmpty()) {
-      System.out.println("enter number:");
-      number = Integer.parseInt(scanner.nextLine());
-      add(number);
+      add(random.nextInt());
       notify();
     }
     Object removedItem = lastNode.getData();
@@ -100,6 +97,5 @@ public class LinkedList {
       display.write(String.format("%s\n", current.getData()));
       current = current.next;
     }
-//    System.out.println();
   }
 }
