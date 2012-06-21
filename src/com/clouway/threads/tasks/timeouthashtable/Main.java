@@ -5,13 +5,13 @@ package com.clouway.threads.tasks.timeouthashtable;
  */
 
 public class Main {
-  public static void main(String[] args) {
-    TimeoutHashtable timeoutHashtable = new TimeoutHashtable();
+  public static void main(String[] args) throws InterruptedException {
+    TimeoutHashtable timeoutHashtable = new TimeoutHashtable(10);
 
-    Timer timer1 = new Timer(timeoutHashtable);
-
-    Thread thread1 = new Thread(timer1,"myThread");
-
-    thread1.start();
+    timeoutHashtable.put("John",20);
+    Thread.sleep(2000);
+    timeoutHashtable.put("Kelly", 19);
+//    Thread.sleep(1000);
+//    System.out.println(timeoutHashtable.get("John"));
   }
 }

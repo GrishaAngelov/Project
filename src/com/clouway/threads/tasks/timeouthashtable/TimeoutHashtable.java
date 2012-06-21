@@ -7,38 +7,35 @@ import java.util.Hashtable;
  */
 public class TimeoutHashtable {
 
-  private Hashtable<String, Object> hashtable;
-  private boolean isMethodUsed = false;
+  private Hashtable<String, Object> table = new Hashtable<String, Object>();
+  private int time;
   private Object object;
 
-  public TimeoutHashtable(){
-    hashtable = new Hashtable<String, Object>();
-    hashtable.put("Peter",25);
+  public TimeoutHashtable(int time) {
+    this.time = time;
   }
 
   public void put(String key, Object value) {
-    hashtable.put(key, value);
-    System.out.println("pair is added...");
-    isMethodUsed = true;
+    table.put(key, value);
+    new Timer(time, table, key);
   }
 
   public Object get(String key) {
-    isMethodUsed = true;
-    if(hashtable.containsKey(key)){
-      object = hashtable.get(key);
-    }
-    else {
+    if (table.contains(key)) {
+      object = table.get(key);
+    } else {
       object = null;
     }
     return object;
   }
 
-  public void remove(String key) {
-    hashtable.remove(key);
-    System.out.println("pair is removed...");
-  }
-
-  public boolean getIsUsedValue(){
-    return isMethodUsed;
+  public Object remove(String key) {
+    if (table.contains(key)) {
+      table.remove(key);
+      object = "pair removed";
+    } else {
+      object = null;
+    }
+    return object;
   }
 }

@@ -1,33 +1,42 @@
 package com.clouway.threads.tasks.timeouthashtable;
 
+import java.util.Hashtable;
+
 /**
  * @author Grisha Angelov <grisha.angelov@clouway.com>
  */
 public class Timer implements Runnable {
+  private Hashtable<String, Object> table;
+  private int time;
   private int counter = 0;
-  private int maxCounterValue = 20;
-  private int actionValue = 15;
-  private TimeoutHashtable timeoutHashtable;
+  private boolean stop = false;
+  private String key;
 
-  public Timer(TimeoutHashtable timeoutHashtable) {
-    this.timeoutHashtable = timeoutHashtable;
+  public Timer(int time, Hashtable table, String key) {
+    this.time = time;
+    this.table = table;
+    this.key = key;
+    new Thread(this).start();
   }
 
-  public synchronized void run() {
-    while (counter < maxCounterValue) {
-      counter++;
-      System.out.println(Thread.currentThread().getName() + ": " + counter);
-
-      //        timeoutHashtable.put("Peter", 18);
-//      System.out.println("get value:" + timeoutHashtable.get("Peter"));
-//      System.out.println("get value:" + timeoutHashtable.get("asd"));
-
-      if (counter > actionValue && !timeoutHashtable.getIsUsedValue()) {   // if time runs out and put() and get() were not used, remove
-         timeoutHashtable.remove("Peter");
-        return;
+  public void run() {
+    while (!stop) {
+      if (counter < time) {
+        if(Thread.currentThread().isInterrupted()){
+          time++;
+        }
+        counter++;
+        System.out.println(Thread.currentThread().getName()+"'s Counter: " + counter);
+        try {
+          Thread.sleep(500);
+        } catch (InterruptedException e) {
+          e.printStackTrace();
+        }
+      } else {
+        table.remove(key);
+        System.out.printf("time runs out... %s pair is removed\n",Thread.currentThread().getName());
+        stop = true;
       }
-
-
     }
   }
 }
