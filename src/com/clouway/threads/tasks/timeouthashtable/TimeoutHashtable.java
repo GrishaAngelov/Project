@@ -10,6 +10,8 @@ public class TimeoutHashtable {
   private Hashtable<String, Object> table = new Hashtable<String, Object>();
   private int time;
   private Object object;
+  private boolean isUsed = false;
+  private Checker checker = new Checker();
 
   public TimeoutHashtable(int time) {
     this.time = time;
@@ -17,15 +19,13 @@ public class TimeoutHashtable {
 
   public void put(String key, Object value) {
     table.put(key, value);
-    new Timer(time, table, key);
+    new Timer(time, table, key, checker);
   }
 
   public Object get(String key) {
-    if (table.contains(key)) {
-      object = table.get(key);
-    } else {
-      object = null;
-    }
+    isUsed = true;
+    checker.setUsed(isUsed);
+    object = table.get(key);
     return object;
   }
 
