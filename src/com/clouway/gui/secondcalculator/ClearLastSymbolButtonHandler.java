@@ -7,15 +7,18 @@ import java.awt.event.ActionListener;
 /**
  * @author Grisha Angelov <grisha.angelov@clouway.com>
  */
-public class ButtonHandler implements ActionListener {
+public class ClearLastSymbolButtonHandler implements ActionListener {
   private JTextField textField;
 
-  public ButtonHandler(JTextField textField) {
+  public ClearLastSymbolButtonHandler(JTextField textField) {
     this.textField = textField;
   }
 
   public void actionPerformed(ActionEvent event) {
-    String buttonLabel = ((JButton) event.getSource()).getText();
-    textField.setText(textField.getText() + buttonLabel);
+    if (textField.getText().length() == 0) {
+      textField.setText("");
+    } else {
+      textField.setText(textField.getText().substring(0, textField.getText().length() - 1));
+    }
   }
 }

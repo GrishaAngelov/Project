@@ -7,14 +7,14 @@ import java.awt.event.ActionListener;
 /**
  * @author Grisha Angelov <grisha.angelov@clouway.com>
  */
-public class ClearLastDigitButtonHandler implements ActionListener {
+public class ClearAllHandler implements ActionListener {
   private JTextField textField;
 
-  public ClearLastDigitButtonHandler(JTextField textField) {
+  public ClearAllHandler(JTextField textField) {
     this.textField = textField;
   }
 
   public void actionPerformed(ActionEvent event) {
-    textField.setText(textField.getText().substring(0, textField.getText().length() - 1));
+    textField.setText("");
   }
 }

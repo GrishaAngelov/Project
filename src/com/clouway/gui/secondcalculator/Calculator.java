@@ -11,9 +11,6 @@ public class Calculator extends JFrame {
   private Container numberContainer;
   private Container operationContainer;
   private Container mainContainer;
-  private ButtonCreator buttonCreator;
-  private ButtonCreator buttonOperationCreator;
-  private ButtonCreator specialButtonCreator;
 
   public Calculator() {
     setTitle("calculator");
@@ -41,31 +38,20 @@ public class Calculator extends JFrame {
     numberContainer.setBackground(Color.ORANGE);
     numberContainer.setLayout(new GridLayout(4, 3, 5, 5));
 
+    String[] buttonNumberLabel = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "0"};
+    add(new ButtonCreator(buttonNumberLabel, new ButtonHandler(textField), mainContainer, numberContainer).createButtons(), BorderLayout.WEST);
     operationContainer = new Container();
     operationContainer.setBackground(Color.ORANGE);
     operationContainer.setLayout(new GridLayout(3, 3, 5, 5));
 
-    String[] buttonNumberLabel = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "0"};
+    Operator operator = new Operator();
+    NumbersHolder numbersHolder = new NumbersHolder();
     String[] buttonOperationLabel = {"+", "-", "*", "/"};
+    add(new ButtonCreator(buttonOperationLabel, new OperationButtonHandler(textField, numbersHolder), mainContainer, operationContainer).createButtons(), BorderLayout.EAST);
 
-    buttonCreator = new ButtonCreator(buttonNumberLabel, new ButtonHandler(textField));
-    buttonCreator.setContainers(mainContainer, numberContainer);
-    buttonCreator.createButtons();
-    add(numberContainer, BorderLayout.WEST);
-
-    buttonOperationCreator = new ButtonCreator(buttonOperationLabel, new OperationButtonHandler(textField));
-    buttonOperationCreator.setContainers(mainContainer, operationContainer);
-    buttonOperationCreator.createButtons();
-    add(operationContainer, BorderLayout.EAST);
-
-    specialButtonCreator = new ButtonCreator(".", new DotButtonHandler(textField));
-    specialButtonCreator.setContainers(mainContainer, operationContainer);
-    specialButtonCreator.createSingleButton();
-    add(operationContainer, BorderLayout.EAST);
-
-    specialButtonCreator = new ButtonCreator("<-", new ClearLastDigitButtonHandler(textField));
-    specialButtonCreator.setContainers(mainContainer, operationContainer);
-    specialButtonCreator.createSingleButton();
-    add(operationContainer, BorderLayout.EAST);
+    add(new ButtonCreator(new String[]{"."}, new DotButtonHandler(textField), mainContainer, operationContainer).createButtons(), BorderLayout.EAST);
+    add(new ButtonCreator(new String[]{"<-"}, new ClearLastSymbolButtonHandler(textField), mainContainer, operationContainer).createButtons(), BorderLayout.EAST);
+    add(new ButtonCreator(new String[]{"clr"}, new ClearAllHandler(textField), mainContainer, operationContainer).createButtons(), BorderLayout.EAST);
+    add(new ButtonCreator(new String[]{"="}, new EqualsHandler(textField, operator, numbersHolder), mainContainer, operationContainer).createButtons(), BorderLayout.EAST);
   }
 }
