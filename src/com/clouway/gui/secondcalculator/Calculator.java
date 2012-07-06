@@ -47,11 +47,13 @@ public class Calculator extends JFrame {
     Operator operator = new Operator();
     NumbersHolder numbersHolder = new NumbersHolder();
     String[] buttonOperationLabel = {"+", "-", "*", "/"};
+
+
     add(new ButtonCreator(buttonOperationLabel, new OperationButtonHandler(textField, numbersHolder), mainContainer, operationContainer).createButtons(), BorderLayout.EAST);
 
     add(new ButtonCreator(new String[]{"."}, new DotButtonHandler(textField), mainContainer, operationContainer).createButtons(), BorderLayout.EAST);
     add(new ButtonCreator(new String[]{"<-"}, new ClearLastSymbolButtonHandler(textField), mainContainer, operationContainer).createButtons(), BorderLayout.EAST);
-    add(new ButtonCreator(new String[]{"clr"}, new ClearAllHandler(textField), mainContainer, operationContainer).createButtons(), BorderLayout.EAST);
+//    add(new ButtonCreator(new String[]{"clr"}, new ClearAllHandler(textField), mainContainer, operationContainer).createButtons(), BorderLayout.EAST);
     add(new ButtonCreator(new String[]{"="}, new EqualsHandler(textField, operator, numbersHolder), mainContainer, operationContainer).createButtons(), BorderLayout.EAST);
   }
 }

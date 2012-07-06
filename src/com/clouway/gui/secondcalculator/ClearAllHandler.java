@@ -8,13 +8,17 @@ import java.awt.event.ActionListener;
  * @author Grisha Angelov <grisha.angelov@clouway.com>
  */
 public class ClearAllHandler implements ActionListener {
-  private JTextField textField;
+  private ActionListenerWrapper listener;
+  private HasText textBox;
 
-  public ClearAllHandler(JTextField textField) {
-    this.textField = textField;
+  public ClearAllHandler(ActionListenerWrapper listener, HasText textBox) {
+    this.listener = listener;
+    this.textBox = textBox;
   }
 
   public void actionPerformed(ActionEvent event) {
-    textField.setText("");
+
+    final JButton button = (JButton) event.getSource();
+    listener.actionPerformed(textBox);
   }
 }
