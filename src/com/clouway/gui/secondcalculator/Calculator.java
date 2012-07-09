@@ -48,12 +48,18 @@ public class Calculator extends JFrame {
     NumbersHolder numbersHolder = new NumbersHolder();
     String[] buttonOperationLabel = {"+", "-", "*", "/"};
 
+    TextFieldWrapper textFieldWrapper = new TextFieldWrapper(textField);
+    ActionListenerWrapper actionListenerWrapperClearAll = new ActionListenerWrapperClearAll();
+    ActionListenerWrapper actionListenerWrapperDot = new ActionListenerWrapperDot();
 
     add(new ButtonCreator(buttonOperationLabel, new OperationButtonHandler(textField, numbersHolder), mainContainer, operationContainer).createButtons(), BorderLayout.EAST);
 
-    add(new ButtonCreator(new String[]{"."}, new DotButtonHandler(textField), mainContainer, operationContainer).createButtons(), BorderLayout.EAST);
+//    add(new ButtonCreator(new String[]{"."}, new DotButtonHandler(textField), mainContainer, operationContainer).createButtons(), BorderLayout.EAST);
+    add(new ButtonCreator(new String[]{"."}, new DotButtonHandler(actionListenerWrapperDot, textFieldWrapper), mainContainer, operationContainer).createButtons(), BorderLayout.EAST);
     add(new ButtonCreator(new String[]{"<-"}, new ClearLastSymbolButtonHandler(textField), mainContainer, operationContainer).createButtons(), BorderLayout.EAST);
+
 //    add(new ButtonCreator(new String[]{"clr"}, new ClearAllHandler(textField), mainContainer, operationContainer).createButtons(), BorderLayout.EAST);
+    add(new ButtonCreator(new String[]{"clr"}, new ClearAllHandler(actionListenerWrapperClearAll, textFieldWrapper), mainContainer, operationContainer).createButtons(), BorderLayout.EAST);
     add(new ButtonCreator(new String[]{"="}, new EqualsHandler(textField, operator, numbersHolder), mainContainer, operationContainer).createButtons(), BorderLayout.EAST);
   }
 }

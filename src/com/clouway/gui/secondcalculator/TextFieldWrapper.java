@@ -6,12 +6,15 @@ import javax.swing.*;
  * @author Grisha Angelov <grisha.angelov@clouway.com>
  */
 public class TextFieldWrapper extends JTextField implements HasText {
-  private final JTextField textField;
+  private JTextField textField;
 
-  public TextFieldWrapper(JTextField textField){
-    this.textField = textField;
+  public TextFieldWrapper() {
+
   }
 
+  public TextFieldWrapper(JTextField textField) {
+    this.textField = textField;
+  }
 
   @Override
   public String getTextValue() {
