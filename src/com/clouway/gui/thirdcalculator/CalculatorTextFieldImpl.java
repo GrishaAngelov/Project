@@ -5,11 +5,14 @@ import javax.swing.*;
 /**
  * @author Grisha Angelov <grisha.angelov@clouway.com>
  */
-public class CalculatorTextFieldImpl extends JTextField implements CalculatorTextField {
+public class CalculatorTextFieldImpl  implements CalculatorTextField {
   private JTextField textField;
 
   public CalculatorTextFieldImpl(JTextField textField){
     this.textField = textField;
+    textField.setColumns(20);
+    textField.setEditable(false);
+    textField.setHorizontalAlignment(SwingConstants.RIGHT);
   }
 
   public void setFieldText(String text){
@@ -18,5 +21,9 @@ public class CalculatorTextFieldImpl extends JTextField implements CalculatorTex
 
   public String getFieldText(){
     return textField.getText();
+  }
+
+  public JTextField getField(){
+    return textField;
   }
 }

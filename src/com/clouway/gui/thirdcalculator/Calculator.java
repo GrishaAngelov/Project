@@ -8,37 +8,49 @@ import java.util.List;
  * @author Grisha Angelov <grisha.angelov@clouway.com>
  */
 public class Calculator extends JFrame {
-  private CalculatorTextFieldImpl textField = new CalculatorTextFieldImpl(new JTextField());
-
+  private CalculatorTextField textField = new CalculatorTextFieldImpl(new JTextField());
+  private OperandsAndOperationProvider operandsAndOperationProvider = new OperandsAndOperationProvider();
+  private ButtonListenerAssigner buttonNumberListenerAssigner;
+  private ButtonListenerAssigner buttonOperationListenerAssigner;
+  private ButtonListenerAssigner specialButtonListenerAssigner;
+  private List<JButton> numberButtonsList;
+  private List<JButton> operationButtonsList;
   private Container container;
+  private Operator operator = new Operator();
 
-  public void setContainerAndTextField(){
+  public void setContainerAndTextField() {
+    setTitle("calculator");
     container = getContentPane();
     container.setBackground(Color.ORANGE);
     setLayout(new FlowLayout());
-    textField.setColumns(20);
-    textField.setEditable(false);
-    textField.setHorizontalAlignment(SwingConstants.RIGHT);
-    add(textField);
+    add(textField.getField());
   }
 
-  public void addButtons(List assignedButtonList) {
+  public void createSpecialButtons(List<JButton> specialButtons){
+   specialButtonListenerAssigner = new ButtonListenerAssigner();
+    add(specialButtonListenerAssigner.assignListenerToSingleButton(specialButtons.get(0), new EqualsHandler(textField, operator, operandsAndOperationProvider)));
+  }
+
+  private void addButtons(List<JButton> assignedButtonList) {
     for (int i = 0; i < assignedButtonList.size(); i++) {
-      add((JButton) assignedButtonList.get(i));
+      add(assignedButtonList.get(i));
     }
   }
 
-  public Calculator(List<JButton> buttons ,List<JButton> operationButtons) {
-     setContainerAndTextField();
-
-    ButtonListenerAssigner buttonListenerAssigner = new ButtonListenerAssigner(buttons, new ButtonNumberHandler(textField));
-    buttonListenerAssigner.assign();
-    List assignedButtonsList = buttonListenerAssigner.getAssignedButtonList();
-    addButtons(assignedButtonsList);
-
-//    buttons = new String[]{"+","-","*","/"};
-
+  private void assignAndAdd(List<JButton> buttonsList, ButtonListenerAssigner buttonListenerAssigner) {
+    buttonsList = buttonListenerAssigner.assignListenerToButtonList();
+    addButtons(buttonsList);
   }
 
+  public Calculator(List<JButton> buttons, List<JButton> operationButtons, List<JButton> specialButtons) {
+    setContainerAndTextField();
 
+    buttonNumberListenerAssigner = new ButtonListenerAssigner(buttons, new ButtonNumberHandler(textField));
+    assignAndAdd(numberButtonsList, buttonNumberListenerAssigner);
+
+    buttonOperationListenerAssigner = new ButtonListenerAssigner(operationButtons, new OperationButtonHandler(textField, operandsAndOperationProvider));
+    assignAndAdd(operationButtonsList, buttonOperationListenerAssigner);
+
+    createSpecialButtons(specialButtons);
+  }
 }

@@ -8,14 +8,14 @@ import java.awt.event.ActionListener;
  * @author Grisha Angelov <grisha.angelov@clouway.com>
  */
 public class ButtonNumberHandler implements ActionListener {
-  private CalculatorTextFieldImpl textField;
+  private CalculatorTextField textField;
 
-  public ButtonNumberHandler(CalculatorTextFieldImpl textField) {
+  public ButtonNumberHandler(CalculatorTextField textField) {
     this.textField = textField;
   }
 
   public void actionPerformed(ActionEvent event) {
     JButton button = (JButton) event.getSource();
-    textField.setText(textField.getText() + button.getText());
+    textField.setFieldText(textField.getFieldText() + button.getText());
   }
 }

@@ -8,22 +8,28 @@ import java.util.List;
  * @author Grisha Angelov <grisha.angelov@clouway.com>
  */
 public class ButtonListenerAssigner {
-  private List butonList;
+  private List<JButton> buttonList;
   private ActionListener actionListener;
 
-  public ButtonListenerAssigner(List butonList, ActionListener actionListener){
-    this.butonList = butonList;
+  public ButtonListenerAssigner(){
+
+  }
+
+  public ButtonListenerAssigner(List<JButton> buttonList, ActionListener actionListener){
+    this.buttonList = buttonList;
     this.actionListener = actionListener;
   }
 
-  public void assign(){
-    for (int i = 0; i < butonList.size(); i++) {
-      JButton button = (JButton)butonList.get(i);
+  public List<JButton> assignListenerToButtonList(){
+    for (int i = 0; i < buttonList.size(); i++) {
+      JButton button = buttonList.get(i);
       button.addActionListener(actionListener);
     }
+    return buttonList;
   }
 
-  public List getAssignedButtonList(){
-    return butonList;
+  public JButton assignListenerToSingleButton(JButton button, ActionListener actionListener){
+    button.addActionListener(actionListener);
+    return button;
   }
 }
