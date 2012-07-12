@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * @author Grisha Angelov <grisha.angelov@clouway.com>
  */
-public class ButtonBuilder implements ButtonCreatorInterface {
+public class ButtonBuilder implements ButtonBuilderInterface {
 
   public List<JButton> createButtons(String[] buttonLabel){
     List<JButton> buttonList = new ArrayList<JButton>();

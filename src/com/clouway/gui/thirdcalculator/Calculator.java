@@ -17,6 +17,9 @@ public class Calculator extends JFrame {
   private List<JButton> operationButtonsList;
   private Container container;
   private Operator operator = new Operator();
+  private ALWrapperDot wrapperDot = new ALWrapperDot();
+  private ALWrapperClearAll wrapperClearAll = new ALWrapperClearAll();
+  private ALWrapperClearLastSymbol wrapperClearLastSymbol = new ALWrapperClearLastSymbol();
 
   public void setContainerAndTextField() {
     setTitle("calculator");
@@ -26,9 +29,12 @@ public class Calculator extends JFrame {
     add(textField.getField());
   }
 
-  public void createSpecialButtons(List<JButton> specialButtons){
-   specialButtonListenerAssigner = new ButtonListenerAssigner();
+  public void createSpecialButtons(List<JButton> specialButtons) {
+    specialButtonListenerAssigner = new ButtonListenerAssigner();
     add(specialButtonListenerAssigner.assignListenerToSingleButton(specialButtons.get(0), new EqualsHandler(textField, operator, operandsAndOperationProvider)));
+    add(specialButtonListenerAssigner.assignListenerToSingleButton(specialButtons.get(1), new ButtonHandler(wrapperDot, textField)));
+    add(specialButtonListenerAssigner.assignListenerToSingleButton(specialButtons.get(2), new ButtonHandler(wrapperClearAll, textField)));
+    add(specialButtonListenerAssigner.assignListenerToSingleButton(specialButtons.get(3), new ButtonHandler(wrapperClearLastSymbol, textField)));
   }
 
   private void addButtons(List<JButton> assignedButtonList) {
