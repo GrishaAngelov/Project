@@ -8,5 +8,4 @@ import javax.swing.*;
 public interface CalculatorTextField {
   void setFieldText(String text);
   String getFieldText();
-  JTextField getField();
 }

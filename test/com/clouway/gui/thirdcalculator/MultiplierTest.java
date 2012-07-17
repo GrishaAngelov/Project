@@ -17,8 +17,32 @@ public class MultiplierTest {
   }
 
   @Test
-  public void multiply() {
+  public void multiplyTwoPositiveNumbers() {
     double result = multiplier.calculate(12, 3);
     assertEquals(36.0, result);
+  }
+
+  @Test
+  public void multiplyPositiveByNegative() {
+    double result = multiplier.calculate(12, -3);
+    assertEquals(-36.0, result);
+  }
+
+  @Test
+  public void multiplyTwoNegativeNumbers() {
+    double result = multiplier.calculate(-12, -3);
+    assertEquals(36.0, result);
+  }
+
+  @Test
+  public void multiplyByZero() {
+    double result = multiplier.calculate(12, 0);
+    assertEquals(0.0, result);
+  }
+
+  @Test
+  public void multiplyTwoZeros() {
+    double result = multiplier.calculate(0, 0);
+    assertEquals(0.0, result);
   }
 }

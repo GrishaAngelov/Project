@@ -8,7 +8,8 @@ import java.util.List;
  * @author Grisha Angelov <grisha.angelov@clouway.com>
  */
 public class Calculator extends JFrame {
-  private CalculatorTextField textField = new CalculatorTextFieldImpl(new JTextField());
+  private JTextField field = new JTextField();
+  private CalculatorTextField textField = new CalculatorTextFieldImpl(field);
   private OperandsAndOperationProvider operandsAndOperationProvider = new OperandsAndOperationProvider();
   private ButtonListenerAssigner buttonNumberListenerAssigner;
   private ButtonListenerAssigner buttonOperationListenerAssigner;
@@ -26,7 +27,7 @@ public class Calculator extends JFrame {
     container = getContentPane();
     container.setBackground(Color.ORANGE);
     setLayout(new FlowLayout());
-    add(textField.getField());
+    add(field);
   }
 
   public void createSpecialButtons(List<JButton> specialButtons) {

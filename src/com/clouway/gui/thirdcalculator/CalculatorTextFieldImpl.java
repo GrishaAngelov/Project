@@ -22,8 +22,4 @@ public class CalculatorTextFieldImpl  implements CalculatorTextField {
   public String getFieldText(){
     return textField.getText();
   }
-
-  public JTextField getField(){
-    return textField;
-  }
 }

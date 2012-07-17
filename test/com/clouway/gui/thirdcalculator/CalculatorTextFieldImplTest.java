@@ -11,15 +11,18 @@ import javax.swing.*;
  */
 public class CalculatorTextFieldImplTest {
   private CalculatorTextFieldImpl textField;
+  private JTextField field;
 
   @Before
   public void setUp(){
-    textField = new CalculatorTextFieldImpl(new JTextField());
+    field = new JTextField();
+    textField = new CalculatorTextFieldImpl(field);
   }
 
   @Test
   public void textFieldFunctionality(){
     textField.setFieldText("12");
-    assertEquals("12", textField.getFieldText());
+    assertEquals(textField.getFieldText(), field.getText());
   }
+
 }
