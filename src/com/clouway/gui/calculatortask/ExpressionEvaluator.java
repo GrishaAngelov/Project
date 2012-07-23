@@ -13,17 +13,17 @@ public class ExpressionEvaluator {
   private Operator tableOperator = new Operator();
   private Hashtable<String, Operation> operationHashtable = tableOperator.fill();
   private List<String> extractedDelimiters;
-  private String[] splittedNumbersAsStrings;
+  private String[] splitNumbersAsStrings;
   private double result;
 
   public double evaluateExpression(String expression) {
     String[] extractedNumbersAsStrings = extractNumbersFrom(expression);
-    List<Integer> extractedNumbersAsIntegers = convertStringNumbersToIntegers(extractedNumbersAsStrings);
-    operandsAndOperationProvider.setFirstNumber(extractedNumbersAsIntegers.get(0));
+    List<Double> extractedNumbersAsDoubles = convertStringNumbersToDoubles(extractedNumbersAsStrings);
+    operandsAndOperationProvider.setFirstNumber(extractedNumbersAsDoubles.get(0));
 
-    for (int i = 0; i < extractedNumbersAsIntegers.size() - 1; i++) {
+    for (int i = 0; i < extractedNumbersAsDoubles.size() - 1; i++) {
      Operation operation = operationHashtable.get(extractedDelimiters.get(i));
-      operandsAndOperationProvider.setSecondNumber(extractedNumbersAsIntegers.get(i + 1));
+      operandsAndOperationProvider.setSecondNumber(extractedNumbersAsDoubles.get(i + 1));
       result = operation.calculate(operandsAndOperationProvider.getFirstNumber(), operandsAndOperationProvider.getSecondNumber());
       operandsAndOperationProvider.setFirstNumber(result);
     }
@@ -33,10 +33,10 @@ public class ExpressionEvaluator {
   public String[] extractNumbersFrom(String evaluationString) {
     extractedDelimiters = servicesProvider.extractDelimitersInString(evaluationString);
     String operationRegEx = servicesProvider.buildRegExFrom(extractedDelimiters);
-    splittedNumbersAsStrings = evaluationString.split(operationRegEx);
-    checkForCorrectionOfSplittedAsStringsNumbers();
+    splitNumbersAsStrings = evaluationString.split(operationRegEx);
+    checkForCorrectionOfSplitAsStringsNumbers();
     checkForNegativeFirstOperand(evaluationString);
-    return splittedNumbersAsStrings;
+    return splitNumbersAsStrings;
   }
 
   private void checkForNegativeFirstOperand(String evaluationString) {
@@ -46,28 +46,28 @@ public class ExpressionEvaluator {
     }
   }
 
-  private void checkForCorrectionOfSplittedAsStringsNumbers() {
-    if (splittedNumbersAsStrings[0].equals("")) {
-      splittedNumbersAsStrings = correctSplittedNumbers(splittedNumbersAsStrings);
+  private void checkForCorrectionOfSplitAsStringsNumbers() {
+    if (splitNumbersAsStrings[0].equals("")) {
+      splitNumbersAsStrings = correctSplitNumbers(splitNumbersAsStrings);
     }
   }
 
-  private String[] correctSplittedNumbers(String[] splittedNumbersAsStrings) {
-    String[] correctNumbers = new String[splittedNumbersAsStrings.length - 1];
+  private String[] correctSplitNumbers(String[]splitNumbersAsStrings) {
+    String[] correctNumbers = new String[splitNumbersAsStrings.length - 1];
     for (int i = 0; i < correctNumbers.length; i++) {
-      correctNumbers[i] = splittedNumbersAsStrings[i + 1];
+      correctNumbers[i] = splitNumbersAsStrings[i + 1];
     }
     return correctNumbers;
   }
 
   private String makeFirstOperandNegative() {
-    return splittedNumbersAsStrings[0] = String.format("-%s", splittedNumbersAsStrings[0]);
+    return splitNumbersAsStrings[0] = String.format("-%s", splitNumbersAsStrings[0]);
   }
 
-  public List<Integer> convertStringNumbersToIntegers(String[] splittedNumbers) {
-    List<Integer> convertedNumbers = new ArrayList<Integer>();
-    for (int i = 0; i < splittedNumbers.length; i++) {
-      convertedNumbers.add(Integer.parseInt(splittedNumbers[i]));
+  public List<Double> convertStringNumbersToDoubles(String[]splitNumbers) {
+    List<Double> convertedNumbers = new ArrayList<Double>();
+    for (int i = 0; i < splitNumbers.length; i++) {
+      convertedNumbers.add(Double.parseDouble(splitNumbers[i]));
     }
     return convertedNumbers;
   }
