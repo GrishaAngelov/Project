@@ -57,4 +57,11 @@ public class SubtractingNumbersTest {
     double result = evaluator.evaluateExpression(expression);
     assertEquals(0.0, result);
   }
+
+  @Test
+  public void subtractDoubleNumbers() {
+    String expression = "12.5-4.2";
+    double result = evaluator.evaluateExpression(expression);
+    assertEquals(8.3, result);
+  }
 }

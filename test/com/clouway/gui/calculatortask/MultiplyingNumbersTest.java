@@ -23,14 +23,6 @@ public class MultiplyingNumbersTest {
     assertEquals(36.0, result);
   }
 
-//  @Test
-//  public void multiplyPositiveByNegative() {
-//    String expression = "12*(-3)";
-//    double result = evaluator.evaluateExpression(expression);
-//    assertEquals(-36.0, result);
-//  }
-
-
   @Test
   public void multiplyNegativeByPositive() {
     String expression = "-12*3";
@@ -50,5 +42,12 @@ public class MultiplyingNumbersTest {
     String expression = "0*0";
     double result = evaluator.evaluateExpression(expression);
     assertEquals(0.0, result);
+  }
+
+  @Test
+  public void multiplyTwoDoubles() {
+    String expression = "4.2*8.0";
+    double result = evaluator.evaluateExpression(expression);
+    assertEquals(33.6, result);
   }
 }

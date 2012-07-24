@@ -3,18 +3,9 @@ package com.clouway.gui.calculatortask;
 /**
  * @author Grisha Angelov <grisha.angelov@clouway.com>
  */
-public class OperandsAndOperationProvider {
+public class OperandsProvider {
   private double firstNumber;
   private double secondNumber;
-  private String operation;
-
-  public String getOperation() {
-    return operation;
-  }
-
-  public void setOperation(String operation) {
-    this.operation = operation;
-  }
 
   public double getFirstNumber() {
     return firstNumber;

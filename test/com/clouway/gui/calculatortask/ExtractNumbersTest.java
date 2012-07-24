@@ -19,7 +19,7 @@ public class ExtractNumbersTest {
   @Test
   public void extractNumbers() {
     String expression = "2+6-3";
-    String[] extractedNumbers = evaluator.extractNumbersFrom(expression);
+    String[] extractedNumbers = evaluator.extractNumbersAsStringsFrom(expression);
     String[] expectedNumberArray = {"2", "6", "3"};
     assertArrayEquals(expectedNumberArray, extractedNumbers);
   }

@@ -30,4 +30,24 @@ public class CalculateExpressionTest {
     assertEquals(4.0, result);
   }
 
+  @Test
+  public void calculateMixedExpressionWithPositiveFirstNumber() {
+    String expression = "5+4/2*3-2";
+    double result = evaluator.evaluateExpression(expression);
+    assertEquals(9.0, result);
+  }
+
+  @Test
+  public void calculateMixedExpressionWithNegativeFirstNumber() {
+    String expression = "-5+4/2*3-2";
+    double result = evaluator.evaluateExpression(expression);
+    assertEquals(-1.0, result);
+  }
+
+  @Test
+  public void calculateExpressionWithDoubles() {
+    String expression = "3.2+4.1*1.8";
+    double result = evaluator.evaluateExpression(expression);
+    assertEquals(10.58, result);
+  }
 }

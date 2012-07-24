@@ -67,4 +67,12 @@ public class AddingNumbersTest {
     assertEquals(0.0, result);
   }
 
+
+  @Test
+  public void addDoubleNumbers() {
+    String expression = "5.2+6.8";
+    double result = evaluator.evaluateExpression(expression);
+    assertEquals(12.0, result);
+  }
+
 }
