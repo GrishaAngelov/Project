@@ -1,5 +1,6 @@
 package com.clouway.gui.calculatortask;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,10 +9,14 @@ import java.util.List;
  */
 public class Main {
   public static void main(String[] args) {
-    ExpressionEvaluator evaluator = new ExpressionEvaluator();
-    List<String> delimiters = new ArrayList<String>();
-    delimiters.add("+");
-    delimiters.add("-");
-    evaluator.evaluateExpression("2*-3");
+    ButtonBuilder buttonBuilder = new ButtonBuilder();
+    List<JButton> buttonList = buttonBuilder.createButtons(new String[]{"1", "2", "3", "4", "5", "6", "7", "8", "9", "0","+","-", "*", "/"});
+//    List<JButton> operationButtons = buttonBuilder.createButtons(new String[]{"+","-", "*", "/"});
+    List<JButton> specialButtons = buttonBuilder.createButtons(new String[]{"=",".","clr","<-"});
+    Calculator calculator = new Calculator(buttonList,/*operationButtons,*/specialButtons);
+    calculator.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    calculator.setLocation(500, 200);
+    calculator.setSize(260, 200);
+    calculator.setVisible(true);
   }
 }

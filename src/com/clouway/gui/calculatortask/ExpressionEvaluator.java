@@ -21,12 +21,15 @@ public class ExpressionEvaluator {
   private Operation operation;
   private double result;
   private Character operationSign;
+  private int delimiterIndex;
+  private String operationSymbol;
+
 
   public double evaluateExpression(String expression) {
     if (isCorrectExpression(expression)) {
       extractNumbersFrom(expression);
       checkForNegativeFirstOperand(expression);
-      return processExpression(extractedNumbersAsDoubles);
+      return performEvaluation(extractedNumbersAsDoubles);
     } else {
       throw new IncorrectExpressionException();
     }
@@ -44,7 +47,7 @@ public class ExpressionEvaluator {
     return isCorrect;
   }
 
-  private double processExpression(List<Double> extractedNumbersAsDoubles) {
+  private double performEvaluation(List<Double> extractedNumbersAsDoubles) {
     while (extractedNumbersAsDoubles.size() > 1) {
       int opIndex = findIndexOfPriorityOperation(extractedDelimiters);
       operandsProvider.setFirstNumber(extractedNumbersAsDoubles.get(opIndex));
@@ -53,7 +56,9 @@ public class ExpressionEvaluator {
       if (checkForPriority(operationSign)) {
         operandsProvider.setSecondNumber(extractedNumbersAsDoubles.get(opIndex + 1));
         checkForDivisionByZero();
-        operation = operationHashtable.get(extractedDelimiters.get(getDelimiter(extractedDelimiters, operationSign)));
+        delimiterIndex = getDelimiterIndex(extractedDelimiters, operationSign);
+        operationSymbol = extractedDelimiters.get(delimiterIndex);
+        operation = operationHashtable.get(operationSymbol);
         double calculated = operation.calculate(operandsProvider.getFirstNumber(), operandsProvider.getSecondNumber());
         operandsProvider.setFirstNumber(calculated);
         extractedNumbersAsDoubles.set(opIndex, operandsProvider.getFirstNumber());
@@ -62,7 +67,10 @@ public class ExpressionEvaluator {
       } else {
         operandsProvider.setFirstNumber(extractedNumbersAsDoubles.get(0));
         operandsProvider.setSecondNumber(extractedNumbersAsDoubles.get(1));
-        operation = operationHashtable.get(extractedDelimiters.get(getDelimiter(extractedDelimiters, operationSign)));
+        delimiterIndex = getDelimiterIndex(extractedDelimiters, operationSign);
+        operationSymbol = extractedDelimiters.get(delimiterIndex);
+        operation = operationHashtable.get(operationSymbol);
+
         operandsProvider.setFirstNumber(operation.calculate(operandsProvider.getFirstNumber(), operandsProvider.getSecondNumber()));
         extractedNumbersAsDoubles.set(0, operandsProvider.getFirstNumber());
         extractedNumbersAsDoubles.remove(1);
@@ -107,7 +115,7 @@ public class ExpressionEvaluator {
     return extractedNumbersAsDoubles.get(0);
   }
 
-  private int getDelimiter(List<String> delimiters, Character ch) {
+  private int getDelimiterIndex(List<String> delimiters, Character ch) {
     int index = 0;
     for (int i = 0; i < delimiters.size(); i++) {
       if (delimiters.get(i).equals(ch.toString())) {
