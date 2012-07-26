@@ -3,6 +3,9 @@ package com.clouway.gui.calculatortask;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Arrays;
+import java.util.List;
+
 import static org.junit.Assert.*;
 
 /**
@@ -19,9 +22,9 @@ public class ExtractNumbersTest {
   @Test
   public void extractNumbers() {
     String expression = "2+6-3";
-    String[] extractedNumbers = evaluator.extractNumbersAsStringsFrom(expression);
-    String[] expectedNumberArray = {"2", "6", "3"};
-    assertArrayEquals(expectedNumberArray, extractedNumbers);
+    List<String> extractedNumbers = evaluator.extractNumbersAsStringsFrom(expression);
+    List<String> expectedNumberArray = Arrays.asList("2", "6", "3");
+    assertEquals(expectedNumberArray, extractedNumbers);
   }
 
 }
