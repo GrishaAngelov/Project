@@ -1,5 +1,6 @@
 package com.clouway.networking.downloadagent;
 
+import javax.swing.*;
 import java.io.*;
 import java.net.*;
 
@@ -7,6 +8,8 @@ import java.net.*;
  * @author Grisha Angelov <grisha.angelov@clouway.com>
  */
 public class DownloadAgent {
+  private File file;
+  private JProgressBar progressBar;
 
   public File downloadFile(String urlString) throws IOException {
     URL url = new URL(urlString);
@@ -14,16 +17,14 @@ public class DownloadAgent {
     InputStream connectionInputStream = urlConnection.getInputStream();
     DataInputStream dataInputStream = new DataInputStream(connectionInputStream);
 
-    int size = urlConnection.getContentLength();
-    byte[] fileData = new byte[size];
-    for (int i = 0; i < size; i++) {
-      fileData[i] = dataInputStream.readByte();
-    }
-
-    String filename = urlString.substring(urlString.lastIndexOf("/") + 1);
-    File file = new File(filename);
+    File file = getFile();
     FileOutputStream fileOutputStream = new FileOutputStream(file);
-    fileOutputStream.write(fileData);
+
+    int size = urlConnection.getContentLength();
+    for (int i = 0; i < size; i++) {
+      fileOutputStream.write(dataInputStream.readByte());
+      progressBar.setValue(i + 1);
+    }
 
     closeStreams(connectionInputStream, dataInputStream, fileOutputStream);
     return file;
@@ -33,5 +34,17 @@ public class DownloadAgent {
     inputStream.close();
     dataInputStream.close();
     fileOutputStream.close();
+  }
+
+  public void setFile(File file) {
+    this.file = file;
+  }
+
+  private File getFile() {
+    return file;
+  }
+
+  public void setProgressBar(JProgressBar progressBar) {
+    this.progressBar = progressBar;
   }
 }

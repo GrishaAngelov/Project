@@ -7,8 +7,14 @@ import java.io.IOException;
  * @author Grisha Angelov <grisha.angelov@clouway.com>
  */
 public class Main {
-  public static void main(String[] args) throws IOException{
-    DownloadAgent downloadAgent = new DownloadAgent();
-    downloadAgent.downloadFile("http://www.carinsurance75.com/blog/wp-content/uploads/2012/05/car.gif");
+  public static void main(String[] args) throws IOException {
+    ButtonBuilder buttonBuilder = new ButtonBuilder();
+    JButton downloadButton = buttonBuilder.createButton("download");
+    DownloadAgentGUI agentGUI = new DownloadAgentGUI(downloadButton);
+    agentGUI.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    agentGUI.setVisible(true);
+    agentGUI.setSize(250, 150);
+    agentGUI.setLocation(500, 200);
+    agentGUI.setResizable(false);
   }
 }
