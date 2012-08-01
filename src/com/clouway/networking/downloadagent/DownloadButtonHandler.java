@@ -12,12 +12,12 @@ import java.io.IOException;
 public class DownloadButtonHandler implements ActionListener {
 
   private JFileChooser fileChooser = new JFileChooser();
-  private DownloadAgent downloadAgent = new DownloadAgent();
   private JTextField addressBar;
+  private JProgressBar progressBar;
 
-  public DownloadButtonHandler(JTextField addressBar, DownloadAgent downloadAgent) {
+  public DownloadButtonHandler(JTextField addressBar, JProgressBar progressBar) {
     this.addressBar = addressBar;
-    this.downloadAgent = downloadAgent;
+    this.progressBar = progressBar;
   }
 
   public void actionPerformed(ActionEvent event) {
@@ -28,7 +28,7 @@ public class DownloadButtonHandler implements ActionListener {
     if (userChoice == JFileChooser.APPROVE_OPTION) {
       try {
         File downloadFile = new File(fileChooser.getSelectedFile().getPath());
-        downloadAgent.setFile(downloadFile);
+        DownloadAgent downloadAgent = new DownloadAgent(downloadFile, progressBar);
         downloadAgent.downloadFile(addressBar.getText());
       } catch (IOException e) {
         e.printStackTrace();

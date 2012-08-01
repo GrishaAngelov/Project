@@ -2,6 +2,7 @@ package com.clouway.networking.downloadagent;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.File;
 
 /**
  * @author Grisha Angelov <grisha.angelov@clouway.com>
@@ -9,7 +10,6 @@ import java.awt.*;
 public class DownloadAgentGUI extends JFrame {
   private JTextField addressBar = new JTextField();
   private JProgressBar progressBar = new JProgressBar();
-  private DownloadAgent downloadAgent = new DownloadAgent();
 
   public DownloadAgentGUI(JButton button) {
     setTitle("DownloadAgent");
@@ -17,8 +17,7 @@ public class DownloadAgentGUI extends JFrame {
     add(new Label("enter URL"));
     setUpAddressBar(addressBar);
     add(progressBar);
-    downloadAgent.setProgressBar(progressBar);
-    button.addActionListener(new DownloadButtonHandler(addressBar, downloadAgent));
+    button.addActionListener(new DownloadButtonHandler(addressBar, progressBar));
     add(button);
   }
 

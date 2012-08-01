@@ -11,13 +11,17 @@ public class DownloadAgent {
   private File file;
   private JProgressBar progressBar;
 
+  public DownloadAgent(File file, JProgressBar progressBar) {
+    this.file = file;
+    this.progressBar = progressBar;
+  }
+
   public File downloadFile(String urlString) throws IOException {
     URL url = new URL(urlString);
     URLConnection urlConnection = url.openConnection();
     InputStream connectionInputStream = urlConnection.getInputStream();
     DataInputStream dataInputStream = new DataInputStream(connectionInputStream);
 
-    File file = getFile();
     FileOutputStream fileOutputStream = new FileOutputStream(file);
 
     int size = urlConnection.getContentLength();
@@ -34,17 +38,5 @@ public class DownloadAgent {
     inputStream.close();
     dataInputStream.close();
     fileOutputStream.close();
-  }
-
-  public void setFile(File file) {
-    this.file = file;
-  }
-
-  private File getFile() {
-    return file;
-  }
-
-  public void setProgressBar(JProgressBar progressBar) {
-    this.progressBar = progressBar;
   }
 }
