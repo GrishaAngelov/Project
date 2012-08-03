@@ -3,17 +3,17 @@ package com.clouway.networking.downloadagent;
 import javax.swing.*;
 import java.io.*;
 import java.net.*;
+import java.util.Observable;
+import java.util.Observer;
 
 /**
  * @author Grisha Angelov <grisha.angelov@clouway.com>
  */
-public class DownloadAgent {
-  private File file;
-  private JProgressBar progressBar;
+public class DownloadAgent extends Observable{
+  private String filePath;
 
-  public DownloadAgent(File file, JProgressBar progressBar) {
-    this.file = file;
-    this.progressBar = progressBar;
+  public DownloadAgent(String filePath){
+    this.filePath = filePath;
   }
 
   public File downloadFile(String urlString) throws IOException {
@@ -22,12 +22,14 @@ public class DownloadAgent {
     InputStream connectionInputStream = urlConnection.getInputStream();
     DataInputStream dataInputStream = new DataInputStream(connectionInputStream);
 
+    File file = new File(filePath);
     FileOutputStream fileOutputStream = new FileOutputStream(file);
 
     int size = urlConnection.getContentLength();
     for (int i = 0; i < size; i++) {
       fileOutputStream.write(dataInputStream.readByte());
-      progressBar.setValue(i + 1);
+      setChanged();
+      notifyObservers(i+1);
     }
 
     closeStreams(connectionInputStream, dataInputStream, fileOutputStream);

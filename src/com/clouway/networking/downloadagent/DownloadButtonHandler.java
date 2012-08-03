@@ -5,11 +5,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+import java.util.Observable;
+import java.util.Observer;
 
 /**
  * @author Grisha Angelov <grisha.angelov@clouway.com>
  */
-public class DownloadButtonHandler implements ActionListener {
+public class DownloadButtonHandler implements ActionListener, Observer {
 
   private JFileChooser fileChooser = new JFileChooser();
   private JTextField addressBar;
@@ -18,6 +20,7 @@ public class DownloadButtonHandler implements ActionListener {
   public DownloadButtonHandler(JTextField addressBar, JProgressBar progressBar) {
     this.addressBar = addressBar;
     this.progressBar = progressBar;
+    progressBar.setStringPainted(true);
   }
 
   public void actionPerformed(ActionEvent event) {
@@ -27,12 +30,17 @@ public class DownloadButtonHandler implements ActionListener {
     int userChoice = fileChooser.showSaveDialog(fileChooser);
     if (userChoice == JFileChooser.APPROVE_OPTION) {
       try {
-        File downloadFile = new File(fileChooser.getSelectedFile().getPath());
-        DownloadAgent downloadAgent = new DownloadAgent(downloadFile, progressBar);
+        DownloadAgent downloadAgent = new DownloadAgent(fileChooser.getSelectedFile().getPath());
+        downloadAgent.addObserver(this);
         downloadAgent.downloadFile(addressBar.getText());
       } catch (IOException e) {
         e.printStackTrace();
       }
     }
+  }
+
+  @Override
+  public void update(Observable observable, Object o) {
+    progressBar.setValue((Integer)o);
   }
 }

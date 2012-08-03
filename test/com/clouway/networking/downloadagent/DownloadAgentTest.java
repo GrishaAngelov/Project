@@ -14,20 +14,16 @@ import static junit.framework.Assert.*;
  */
 public class DownloadAgentTest {
   private DownloadAgent downloadAgent;
-  private File downloadedFile;
 
   @Before
   public void setUp() {
-    URL urlCar2 = getClass().getResource("car2.gif");
-    downloadedFile = new File(urlCar2.getPath());
-    downloadAgent = new DownloadAgent(downloadedFile, new JProgressBar());
+    downloadAgent = new DownloadAgent(getClass().getResource("car.gif").getPath());
   }
 
   @Test
   public void downloadResourceFromCorrectURL() throws IOException {
-    URL urlCar = getClass().getResource("car.gif");
-    File oldFile = new File(urlCar.getPath());
-    downloadAgent.downloadFile("http://www.carinsurance75.com/blog/wp-content/uploads/2012/05/car.gif");
+    File oldFile = new File(getClass().getResource("car.gif").getPath());
+    File downloadedFile = downloadAgent.downloadFile("http://www.carinsurance75.com/blog/wp-content/uploads/2012/05/car.gif");
     assertEquals(oldFile.getTotalSpace(), downloadedFile.getTotalSpace());
   }
 
