@@ -8,11 +8,11 @@ import java.io.IOException;
  */
 public class ClientMain {
   public static void main(String[] args) throws ClassNotFoundException, IOException {
-    Client client = new Client();
-    client.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    client.setSize(500, 200);
-    client.setVisible(true);
-    client.setResizable(false);
-    client.runClient();
+    ClientGUI clientGUI = new ClientGUI();
+    clientGUI.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    clientGUI.setSize(500, 200);
+    clientGUI.setVisible(true);
+    clientGUI.setResizable(false);
+    clientGUI.runClient();
   }
 }

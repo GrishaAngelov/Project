@@ -8,11 +8,11 @@ import java.io.IOException;
  */
 public class ServerMain {
   public static void main(String[] args) throws IOException {
-    Server server = new Server();
-    server.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    server.setSize(500, 200);
-    server.setVisible(true);
-    server.setResizable(false);
-    server.runServer();
+    ServerGUI serverGUI = new ServerGUI();
+    serverGUI.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    serverGUI.setSize(500, 200);
+    serverGUI.setVisible(true);
+    serverGUI.setResizable(false);
+    serverGUI.runServer();
   }
 }
