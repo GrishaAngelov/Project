@@ -21,7 +21,7 @@ public class ButtonBuilderTest {
 
   @Test
   public void createButton(){
-    JButton button = buttonBuilder.createButton("myButton");
+    JButton button = buttonBuilder.buildButton("myButton");
     assertEquals("myButton",button.getText());
     assertNotNull(button);
   }

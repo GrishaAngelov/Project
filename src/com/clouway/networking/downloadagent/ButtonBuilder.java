@@ -7,7 +7,7 @@ import javax.swing.*;
  */
 public class ButtonBuilder {
 
-  public JButton createButton(String title) {
+  public JButton buildButton(String title) {
     return new JButton(title);
   }
 }
