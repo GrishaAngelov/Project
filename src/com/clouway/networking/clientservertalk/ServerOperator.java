@@ -25,15 +25,20 @@ public class ServerOperator {
   }
 
   public void runServer() throws IOException {
-    setUpServerAndConnection();
+    setUpServer();
+    setUpConnection();
     getClientOutputStream();
     sendDataToClient();
     addListener();
   }
 
-  private void setUpServerAndConnection() throws IOException {
+  private void setUpServer() throws IOException {
     serverSocket = new ServerSocket(port);
     textArea.append("Waiting for connection...\n");
+
+  }
+
+  private void setUpConnection() throws IOException {
     clientConnection = serverSocket.accept();
     textArea.append("Connection received\n");
   }

@@ -27,18 +27,18 @@ public class ConnectButtonHandler implements ActionListener {
   public void actionPerformed(ActionEvent event) {
     try {
       connectButton.setEnabled(false);
-      setUpClientAndConnection();
+      setUpClient();
       getClientInputStream();
       getDataFromServer();
       closeConnection();
     } catch (IOException e) {
-      e.printStackTrace();
+      textArea.append("An error occurred: " + e.getMessage());
     } catch (ClassNotFoundException e) {
       e.printStackTrace();
     }
   }
 
-  private void setUpClientAndConnection() throws IOException {
+  private void setUpClient() throws IOException {
     client = new Socket(InetAddress.getByName("localhost"), port);
     textArea.append("Connected to server\n");
   }
