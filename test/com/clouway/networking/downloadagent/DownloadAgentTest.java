@@ -18,6 +18,7 @@ public class DownloadAgentTest {
   @Before
   public void setUp() {
     downloadAgent = new DownloadAgent(getClass().getResource("car.gif").getPath());
+    downloadAgent.setProgressBar(new JProgressBar());
   }
 
   @Test

@@ -3,44 +3,60 @@ package com.clouway.networking.downloadagent;
 import javax.swing.*;
 import java.io.*;
 import java.net.*;
-import java.util.Observable;
-import java.util.Observer;
 
 /**
  * @author Grisha Angelov <grisha.angelov@clouway.com>
  */
-public class DownloadAgent extends Observable {
+public class DownloadAgent implements Runnable {
   private String filePath;
   private InputStream connectionInputStream;
   private DataInputStream dataInputStream;
   private FileOutputStream fileOutputStream;
   private File file;
+  private int size = 0;
+  private JProgressBar progressBar;
 
-  public DownloadAgent(String filePath) {
+  public  DownloadAgent(String filePath) {
     this.filePath = filePath;
   }
 
+  public void setProgressBar(JProgressBar progressBar) {
+    this.progressBar = progressBar;
+  }
+
   public File downloadFile(String urlString) throws IOException {
-    try {
-      URL url = new URL(urlString);
-      URLConnection urlConnection = url.openConnection();
-      connectionInputStream = urlConnection.getInputStream();
-      dataInputStream = new DataInputStream(connectionInputStream);
+    URL url = new URL(urlString);
+    URLConnection urlConnection = url.openConnection();
+    connectionInputStream = urlConnection.getInputStream();
+    dataInputStream = new DataInputStream(connectionInputStream);
 
-      file = new File(filePath);
-      fileOutputStream = new FileOutputStream(file);
+    file = new File(filePath);
+    fileOutputStream = new FileOutputStream(file);
+    size = urlConnection.getContentLength();
 
-      int size = urlConnection.getContentLength();
-      for (int i = 0; i < size; i++) {
-        fileOutputStream.write(dataInputStream.readByte());
-        setChanged();
-        notifyObservers(i + 1);
-      }
-    } finally {
-      connectionInputStream.close();
-      dataInputStream.close();
-      fileOutputStream.close();
-    }
+    new Thread(this).start();
     return file;
+  }
+
+  @Override
+  public void run() {
+    try {
+      progressBar.setMaximum(size);
+      for (int i = 0; i < progressBar.getMaximum(); i++) {
+        fileOutputStream.write(dataInputStream.readByte());
+        progressBar.setValue((progressBar.getMaximum() - size) + 1);
+        size--;
+      }
+    } catch (IOException e) {
+      e.printStackTrace();
+    } finally {
+      try {
+        connectionInputStream.close();
+        dataInputStream.close();
+        fileOutputStream.close();
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+    }
   }
 }

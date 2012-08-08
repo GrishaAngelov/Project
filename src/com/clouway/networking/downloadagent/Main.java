@@ -8,9 +8,7 @@ import java.io.IOException;
  */
 public class Main {
   public static void main(String[] args) throws IOException {
-    ButtonBuilder buttonBuilder = new ButtonBuilder();
-    JButton downloadButton = buttonBuilder.buildButton("download");
-    DownloadAgentGUI agentGUI = new DownloadAgentGUI(downloadButton);
+    DownloadAgentGUI agentGUI = new DownloadAgentGUI();
     agentGUI.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     agentGUI.setVisible(true);
     agentGUI.setSize(250, 150);

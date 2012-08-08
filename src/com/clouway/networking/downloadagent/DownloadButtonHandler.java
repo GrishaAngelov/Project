@@ -11,16 +11,15 @@ import java.util.Observer;
 /**
  * @author Grisha Angelov <grisha.angelov@clouway.com>
  */
-public class DownloadButtonHandler implements ActionListener, Observer {
-
-  private JFileChooser fileChooser = new JFileChooser();
+public class DownloadButtonHandler implements ActionListener{
+  private JFileChooser fileChooser;
   private JTextField addressBar;
   private JProgressBar progressBar;
 
   public DownloadButtonHandler(JTextField addressBar, JProgressBar progressBar) {
     this.addressBar = addressBar;
     this.progressBar = progressBar;
-    progressBar.setStringPainted(true);
+    fileChooser = new JFileChooser();
   }
 
   public void actionPerformed(ActionEvent event) {
@@ -31,16 +30,11 @@ public class DownloadButtonHandler implements ActionListener, Observer {
     if (userChoice == JFileChooser.APPROVE_OPTION) {
       try {
         DownloadAgent downloadAgent = new DownloadAgent(fileChooser.getSelectedFile().getPath());
-        downloadAgent.addObserver(this);
+        downloadAgent.setProgressBar(progressBar);
         downloadAgent.downloadFile(addressBar.getText());
       } catch (IOException e) {
         e.printStackTrace();
       }
     }
-  }
-
-  @Override
-  public void update(Observable observable, Object o) {
-    progressBar.setValue((Integer)o);
   }
 }
