@@ -6,28 +6,28 @@ import java.awt.event.ActionListener;
 /**
  * @author Grisha Angelov <grisha.angelov@clouway.com>
  */
-public class EqualsListener implements ActionListener {
-  private CalculatorTextField textField;
+public class EqualsButtonListener implements ActionListener {
+  private HasText text;
 
-  public EqualsListener(CalculatorTextField textField) {
-    this.textField = textField;
+  public EqualsButtonListener(HasText text) {
+    this.text = text;
   }
 
   public void actionPerformed(ActionEvent event) {
-    if (textField.getFieldText().length() == 0) {
-      textField.setFieldText("");
+    if (text.getFieldText().length() == 0) {
+      text.setFieldText("");
     } else {
       try {
-        String expression = textField.getFieldText();
+        String expression = text.getFieldText();
         ExpressionEvaluator expressionEvaluator = new ExpressionEvaluator();
         Double result = expressionEvaluator.evaluateExpression(expression);
-        textField.setFieldText(result.toString());
+        text.setFieldText(result.toString());
       } catch (DivideByZeroException e) {
-        textField.setFieldText("Undefined Operation");
+        text.setFieldText("Undefined Operation");
       } catch (IncorrectExpressionException e) {
-        textField.setFieldText("Incorrect Expression");
+        text.setFieldText("Incorrect Expression");
       } catch (NumberFormatException e) {
-        textField.setFieldText(e.toString());
+        text.setFieldText(e.toString());
       }
     }
   }

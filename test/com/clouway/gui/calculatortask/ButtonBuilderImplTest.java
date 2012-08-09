@@ -11,25 +11,16 @@ import static junit.framework.Assert.assertEquals;
  * @author Grisha Angelov <grisha.angelov@clouway.com>
  */
 public class ButtonBuilderImplTest {
-  private ButtonBuilderImpl buttonBuilderImpl;
+  private ButtonBuilder buttonBuilder;
 
   @Before
   public void setUp() {
-    buttonBuilderImpl = new ButtonBuilderImpl();
+    buttonBuilder = new ButtonBuilderImpl();
   }
 
   @Test
-  public void createButtons() {
-    int size = buttonBuilderImpl.buildButtons(new String[]{"1"},new NumbersAndOperationsClickButtonListener(new CalculatorTextFieldImpl(new JTextField()))).size();
-    assertEquals(1, size);
-  }
-
-  @Test
-  public void createSequenceInvocationsButtons() {
-    int size = buttonBuilderImpl.buildButtons(new String[]{"1", "2", "3"},new NumbersAndOperationsClickButtonListener(new CalculatorTextFieldImpl(new JTextField()))).size();
-    assertEquals(3, size);
-
-    size = buttonBuilderImpl.buildButtons(new String[]{"1", "2", "3"},new NumbersAndOperationsClickButtonListener(new CalculatorTextFieldImpl(new JTextField()))).size();
-    assertEquals(3, size);
+  public void createButton() {
+    JButton button = buttonBuilder.buildButton("1",new ClickButtonListener(new CalculatorDisplay(new JTextField())));
+    assertEquals("1", button.getText());
   }
 }

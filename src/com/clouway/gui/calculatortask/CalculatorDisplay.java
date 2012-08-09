@@ -5,10 +5,10 @@ import javax.swing.*;
 /**
  * @author Grisha Angelov <grisha.angelov@clouway.com>
  */
-public class CalculatorTextFieldImpl implements CalculatorTextField {
+public class CalculatorDisplay implements HasText {
   private JTextField textField;
 
-  public CalculatorTextFieldImpl(JTextField textField) {
+  public CalculatorDisplay(JTextField textField) {
     this.textField = textField;
     textField.setColumns(20);
     textField.setEditable(false);

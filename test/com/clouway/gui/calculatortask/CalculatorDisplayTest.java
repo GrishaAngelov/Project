@@ -10,14 +10,14 @@ import static junit.framework.Assert.assertEquals;
 /**
  * @author Grisha Angelov <grisha.angelov@clouway.com>
  */
-public class CalculatorTextFieldImplTest {
-  private CalculatorTextFieldImpl textField;
+public class CalculatorDisplayTest {
+  private CalculatorDisplay textField;
   private JTextField field;
 
   @Before
   public void setUp(){
     field = new JTextField();
-    textField = new CalculatorTextFieldImpl(field);
+    textField = new CalculatorDisplay(field);
   }
 
   @Test

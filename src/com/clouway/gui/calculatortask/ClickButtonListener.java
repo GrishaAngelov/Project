@@ -7,15 +7,15 @@ import java.awt.event.ActionListener;
 /**
  * @author Grisha Angelov <grisha.angelov@clouway.com>
  */
-public class NumbersAndOperationsClickButtonListener implements ActionListener {
-  private CalculatorTextField textField;
+public class ClickButtonListener implements ActionListener {
+  private HasText text;
 
-  public NumbersAndOperationsClickButtonListener(CalculatorTextField textField) {
-    this.textField = textField;
+  public ClickButtonListener(HasText text) {
+    this.text = text;
   }
 
   public void actionPerformed(ActionEvent event) {
     JButton button = (JButton) event.getSource();
-    textField.setFieldText(textField.getFieldText() + button.getText());
+    text.setFieldText(text.getFieldText() + button.getText());
   }
 }

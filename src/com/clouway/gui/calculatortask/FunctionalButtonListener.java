@@ -8,14 +8,14 @@ import java.awt.event.ActionListener;
  */
 public class FunctionalButtonListener implements ActionListener {
   private ActionListenerWrapper listener;
-  private CalculatorTextField textField;
+  private HasText text;
 
-  public FunctionalButtonListener(ActionListenerWrapper listener, CalculatorTextField textField) {
+  public FunctionalButtonListener(ActionListenerWrapper listener, HasText text) {
     this.listener = listener;
-    this.textField = textField;
+    this.text = text;
   }
 
   public void actionPerformed(ActionEvent event) {
-    listener.actionPerformed(textField);
+    listener.actionPerformed(text);
   }
 }

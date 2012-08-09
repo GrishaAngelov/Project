@@ -7,5 +7,5 @@ import java.util.EventListener;
  */
 public interface ActionListenerWrapper extends EventListener {
 
-  public void actionPerformed(CalculatorTextField textField);
+  public void actionPerformed(HasText text);
 }
