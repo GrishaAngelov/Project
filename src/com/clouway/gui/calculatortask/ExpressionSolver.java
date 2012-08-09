@@ -8,25 +8,25 @@ import java.util.List;
  */
 public class ExpressionSolver {
 
-  private List<Double> extractedNumbersAsDoubles;
-  private List<String> extractedDelimiters;
-  private OperandsProvider operandsProvider = new OperandsProvider();
+  private List<Double> numbersAsDoubles;
+  private List<String> operationDelimiters;
+  private CalculationOperandsProvider calculationOperandsProvider = new CalculationOperandsProvider();
   private int delimiterIndex;
   private String operationSymbol;
   private Operation operation;
   private Hashtable<String, Operation> operationHashtable = new Operator().fill();
 
-  public ExpressionSolver(List<Double> extractedNumbersAsDoubles, List<String> extractedDelimiters) {
-    this.extractedNumbersAsDoubles = extractedNumbersAsDoubles;
-    this.extractedDelimiters = extractedDelimiters;
+  public ExpressionSolver(List<Double> numbersAsDoubles, List<String> operationDelimiters) {
+    this.numbersAsDoubles = numbersAsDoubles;
+    this.operationDelimiters = operationDelimiters;
   }
 
 
   public Double solve() {
-    while (extractedNumbersAsDoubles.size() > 1) {
-      int opIndex = findIndexOfPriorityOperation(extractedDelimiters);
-      operandsProvider.setFirstNumber(extractedNumbersAsDoubles.get(opIndex));
-      Character operationSign = extractedDelimiters.get(opIndex).charAt(0);
+    while (numbersAsDoubles.size() > 1) {
+      int opIndex = findIndexOfPriorityOperation(operationDelimiters);
+      calculationOperandsProvider.setFirstOperand(numbersAsDoubles.get(opIndex));
+      Character operationSign = operationDelimiters.get(opIndex).charAt(0);
 
       if (checkForPriority(operationSign)) {
         solveWithPriority(opIndex, operationSign);
@@ -34,37 +34,45 @@ public class ExpressionSolver {
         solveWithoutPriority(operationSign);
       }
     }
-    double result = operandsProvider.getFirstNumber();
+    double result = calculationOperandsProvider.getFirstOperand();
     return result;
   }
 
+  /* example: 5+8/4
+      1 step: 8/4 = 2
+      2 step: 5+2 = 7
+   */
   private void solveWithPriority(int opIndex, Character operationSign) {
-    operandsProvider.setSecondNumber(extractedNumbersAsDoubles.get(opIndex + 1));
-    checkForDivisionByZero(operandsProvider, operationSign);
-    delimiterIndex = getDelimiterIndex(extractedDelimiters, operationSign);
-    operationSymbol = extractedDelimiters.get(delimiterIndex);
+    calculationOperandsProvider.setSecondOperand(numbersAsDoubles.get(opIndex + 1));
+    checkForDivisionByZero(calculationOperandsProvider, operationSign);
+    delimiterIndex = getOperationDelimiterIndex(operationDelimiters, operationSign);
+    operationSymbol = operationDelimiters.get(delimiterIndex);
     operation = operationHashtable.get(operationSymbol);
-    double calculated = operation.calculate(operandsProvider.getFirstNumber(), operandsProvider.getSecondNumber());
-    operandsProvider.setFirstNumber(calculated);
-    extractedNumbersAsDoubles.set(opIndex, operandsProvider.getFirstNumber());
-    extractedNumbersAsDoubles.remove(opIndex + 1);
-    extractedDelimiters.remove(opIndex);
+    double calculated = operation.calculate(calculationOperandsProvider.getFirstOperand(), calculationOperandsProvider.getSecondOperand());
+    calculationOperandsProvider.setFirstOperand(calculated);
+    numbersAsDoubles.set(opIndex, calculationOperandsProvider.getFirstOperand());
+    numbersAsDoubles.remove(opIndex + 1);
+    operationDelimiters.remove(opIndex);
   }
 
+  /* example: 5+8-4
+      1 step: 5+8 = 13
+      2 step: 13-4 = 9
+   */
   private void solveWithoutPriority(Character operationSign) {
-    operandsProvider.setFirstNumber(extractedNumbersAsDoubles.get(0));
-    operandsProvider.setSecondNumber(extractedNumbersAsDoubles.get(1));
-    delimiterIndex = getDelimiterIndex(extractedDelimiters, operationSign);
-    operationSymbol = extractedDelimiters.get(delimiterIndex);
+    calculationOperandsProvider.setFirstOperand(numbersAsDoubles.get(0));
+    calculationOperandsProvider.setSecondOperand(numbersAsDoubles.get(1));
+    delimiterIndex = getOperationDelimiterIndex(operationDelimiters, operationSign);
+    operationSymbol = operationDelimiters.get(delimiterIndex);
     operation = operationHashtable.get(operationSymbol);
-    operandsProvider.setFirstNumber(operation.calculate(operandsProvider.getFirstNumber(), operandsProvider.getSecondNumber()));
-    extractedNumbersAsDoubles.set(0, operandsProvider.getFirstNumber());
-    extractedNumbersAsDoubles.remove(1);
-    extractedDelimiters.remove(0);
+    calculationOperandsProvider.setFirstOperand(operation.calculate(calculationOperandsProvider.getFirstOperand(), calculationOperandsProvider.getSecondOperand()));
+    numbersAsDoubles.set(0, calculationOperandsProvider.getFirstOperand());
+    numbersAsDoubles.remove(1);
+    operationDelimiters.remove(0);
   }
 
-  private void checkForDivisionByZero(OperandsProvider operandsProvider, Character operationSign) {
-    if (operandsProvider.getSecondNumber() == 0.0 && operationSign == '/') {
+  private void checkForDivisionByZero(CalculationOperandsProvider calculationOperandsProvider, Character operationSign) {
+    if (calculationOperandsProvider.getSecondOperand() == 0.0 && operationSign == '/') {
       throw new DivideByZeroException();
     }
   }
@@ -79,7 +87,7 @@ public class ExpressionSolver {
     return hasPriority;
   }
 
-  private int getDelimiterIndex(List<String> delimiters, Character ch) {
+  private int getOperationDelimiterIndex(List<String> delimiters, Character ch) {
     int index = 0;
     for (int i = 0; i < delimiters.size(); i++) {
       if (delimiters.get(i).equals(ch.toString())) {

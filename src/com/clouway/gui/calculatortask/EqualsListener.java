@@ -6,10 +6,10 @@ import java.awt.event.ActionListener;
 /**
  * @author Grisha Angelov <grisha.angelov@clouway.com>
  */
-public class EqualsHandler implements ActionListener {
+public class EqualsListener implements ActionListener {
   private CalculatorTextField textField;
 
-  public EqualsHandler(CalculatorTextField textField) {
+  public EqualsListener(CalculatorTextField textField) {
     this.textField = textField;
   }
 
