@@ -1,10 +1,14 @@
 package com.clouway.networking.downloadagent;
 
+import com.clouway.networking.downloadagent_.*;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -14,11 +18,11 @@ import java.util.Observer;
 public class DownloadButtonHandler implements ActionListener{
   private JFileChooser fileChooser;
   private JTextField addressBar;
-  private JProgressBar progressBar;
+  private DownloadAgent downloadAgent;
 
-  public DownloadButtonHandler(JTextField addressBar, JProgressBar progressBar) {
+  public DownloadButtonHandler(JTextField addressBar, DownloadAgent downloadAgent) {
     this.addressBar = addressBar;
-    this.progressBar = progressBar;
+    this.downloadAgent = downloadAgent;
     fileChooser = new JFileChooser();
   }
 
@@ -29,12 +33,23 @@ public class DownloadButtonHandler implements ActionListener{
     int userChoice = fileChooser.showSaveDialog(fileChooser);
     if (userChoice == JFileChooser.APPROVE_OPTION) {
       try {
-        DownloadAgent downloadAgent = new DownloadAgent(fileChooser.getSelectedFile().getPath());
-        downloadAgent.setProgressBar(progressBar);
-        downloadAgent.downloadFile(addressBar.getText());
+        if (checkForIncorrectURL(addressBar.getText())) {
+          URL url = new URL(addressBar.getText());
+          URLConnection urlConnection = url.openConnection();
+          downloadAgent.download(urlConnection, fileChooser.getSelectedFile().getPath());
+        }
       } catch (IOException e) {
-        e.printStackTrace();
+        JOptionPane.showMessageDialog(new JFrame(), "Not existing URL!");
       }
     }
+  }
+
+  private boolean checkForIncorrectURL(String urlString) {
+    boolean isCorrectUrl = true;
+    if (!urlString.startsWith("http://")) {
+      JOptionPane.showMessageDialog(new JFrame(), "Incorrect URL!");
+      isCorrectUrl = false;
+    }
+    return isCorrectUrl;
   }
 }
