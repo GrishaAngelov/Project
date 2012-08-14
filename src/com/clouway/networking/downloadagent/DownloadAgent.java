@@ -11,7 +11,6 @@ import java.util.List;
 public class DownloadAgent implements ObservableObject {
   private List<ProgressObserver> progressObserverList = new ArrayList<ProgressObserver>();
   private DataInputStream dataInputStream;
-  private FileOutputStream fileOutputStream;
   private int size = 0;
   private int maxValue;
 
@@ -20,11 +19,8 @@ public class DownloadAgent implements ObservableObject {
     progressObserverList.add(progressObserver);
   }
 
-  public void download(URLConnection connectionInputStream, String filePath) throws IOException {
-
+  public void download(URLConnection connectionInputStream, final FileOutputStream fileOutputStream) throws IOException {
     dataInputStream = new DataInputStream(connectionInputStream.getInputStream());
-    File file = new File(filePath);
-    fileOutputStream = new FileOutputStream(file);
     size = connectionInputStream.getContentLength();
     maxValue = size;
 

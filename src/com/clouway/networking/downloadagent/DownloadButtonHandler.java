@@ -1,16 +1,13 @@
 package com.clouway.networking.downloadagent;
 
-import com.clouway.networking.downloadagent_.*;
-
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.Observable;
-import java.util.Observer;
 
 /**
  * @author Grisha Angelov <grisha.angelov@clouway.com>
@@ -28,15 +25,16 @@ public class DownloadButtonHandler implements ActionListener{
 
   public void actionPerformed(ActionEvent event) {
     String filename = addressBar.getText().substring(addressBar.getText().lastIndexOf("/") + 1);
-    File file = new File(filename);
-    fileChooser.setSelectedFile(file);
+    fileChooser.setSelectedFile(new File(filename));
     int userChoice = fileChooser.showSaveDialog(fileChooser);
     if (userChoice == JFileChooser.APPROVE_OPTION) {
       try {
-        if (checkForIncorrectURL(addressBar.getText())) {
+        if (isCorrectURL(addressBar.getText())) {
           URL url = new URL(addressBar.getText());
           URLConnection urlConnection = url.openConnection();
-          downloadAgent.download(urlConnection, fileChooser.getSelectedFile().getPath());
+          File file = new File(fileChooser.getSelectedFile().getPath());
+          FileOutputStream fileOutputStream = new FileOutputStream(file);
+          downloadAgent.download(urlConnection, fileOutputStream);
         }
       } catch (IOException e) {
         JOptionPane.showMessageDialog(new JFrame(), "Not existing URL!");
@@ -44,7 +42,7 @@ public class DownloadButtonHandler implements ActionListener{
     }
   }
 
-  private boolean checkForIncorrectURL(String urlString) {
+  private boolean isCorrectURL(String urlString) {
     boolean isCorrectUrl = true;
     if (!urlString.startsWith("http://")) {
       JOptionPane.showMessageDialog(new JFrame(), "Incorrect URL!");
