@@ -13,24 +13,26 @@ import static junit.framework.Assert.*;
  */
 public class DownloadAgentTest {
   private DownloadAgent agent;
-  private File oldFile;
-  private File downloadedFile;
 
   @Before
   public void setUp() {
     agent = new DownloadAgent();
-    oldFile = new File(getClass().getResource("car.gif").getPath());
-    downloadedFile = new File("car2.gif");
   }
 
   @Test
   public void downloadResourceFromExistingURL() throws IOException {
-    agent.download(new URL("http://www.carinsurance75.com/blog/wp-content/uploads/2012/05/car.gif").openConnection(), new FileOutputStream(downloadedFile));
-    assertEquals(oldFile.getTotalSpace(), downloadedFile.getTotalSpace());
+    URLConnection connection = new URL("http://www.carinsurance75.com/blog/wp-content/uploads/2012/05/car.gif").openConnection();
+    InputStream inputStream = connection.getInputStream();
+    File  downloadedFile = new File("downloadedCar.gif");
+    int contentSize = connection.getContentLength();
+    agent.download(inputStream, new FileOutputStream(downloadedFile), contentSize);
+    assertEquals(getClass().getResourceAsStream("car.gif").read(), getClass().getResourceAsStream("downloadedCar.gif").read());
   }
 
   @Test(expected = UnknownHostException.class)
   public void downloadResourceFromNotExistingURL() throws IOException {
-    agent.download(new URL("http://akljsdh8723894.com/picturefile.jpg").openConnection(), new FileOutputStream(downloadedFile));
+    int contentSize = new URL("http://www.carinsurance75.com/blog/wp-content/uploads/2012/05/car.gif").openConnection().getContentLength();
+    File  downloadedFile = new File("downloadedCar.gif");
+    agent.download(new URL("http://akjsdh.com/picture.jpg").openConnection().getInputStream(), new FileOutputStream(downloadedFile), contentSize);
   }
 }

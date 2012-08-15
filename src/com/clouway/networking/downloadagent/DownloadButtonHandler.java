@@ -34,7 +34,7 @@ public class DownloadButtonHandler implements ActionListener{
           URLConnection urlConnection = url.openConnection();
           File file = new File(fileChooser.getSelectedFile().getPath());
           FileOutputStream fileOutputStream = new FileOutputStream(file);
-          downloadAgent.download(urlConnection, fileOutputStream);
+          downloadAgent.download(urlConnection.getInputStream(), fileOutputStream, urlConnection.getContentLength());
         }
       } catch (IOException e) {
         JOptionPane.showMessageDialog(new JFrame(), "Not existing URL!");
