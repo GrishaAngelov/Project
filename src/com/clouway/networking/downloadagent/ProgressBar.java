@@ -12,13 +12,13 @@ public class ProgressBar implements ProgressObserver {
     this.progressBar = progressBar;
   }
 
+  /**
+   * Update the progress bar with the provided value
+   *
+   * @param value
+   */
   @Override
   public void update(int value) {
     progressBar.setValue(value);
-  }
-
-  @Override
-  public void setMaxValue(int value) {
-    progressBar.setMaximum(value);
   }
 }

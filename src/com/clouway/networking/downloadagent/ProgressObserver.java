@@ -5,5 +5,4 @@ package com.clouway.networking.downloadagent;
  */
 public interface ProgressObserver {
   void update(int value);
-  void setMaxValue(int value);
 }

@@ -3,66 +3,39 @@ package com.clouway.networking.downloadagent;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.net.URL;
+import java.net.URLConnection;
 
-import static junit.framework.Assert.assertEquals;
+import static org.hamcrest.Matchers.endsWith;
+import static org.hamcrest.Matchers.startsWith;
+import static org.junit.Assert.assertThat;
 
 /**
  * @author Grisha Angelov <grisha.angelov@clouway.com>
  */
 public class UpdateProgressTest {
-  private MyDownloadAgent agent;
-  private MyProgressBar progressBar;
-
+  private DownloadAgent agent;
 
   @Before
   public void setUp() {
-    agent = new MyDownloadAgent();
-    progressBar = new MyProgressBar();
-    progressBar.addObserver(agent);
+    agent = new DownloadAgent();
   }
+
   @Test
-  public void updateProgress() {
-
-    progressBar.update();
-    String updateProgress = agent.getUpdateInformation();
-    assertEquals("12345678910", updateProgress);
-  }
-
-  class MyDownloadAgent implements ProgressObserver {
-    int maxValue;
-    StringBuilder stringBuilder = new StringBuilder();
-
-    @Override
-    public void update(int value) {
-      stringBuilder.append(value);
-    }
-
-    @Override
-    public void setMaxValue(int value) {
-      maxValue = value;
-    }
-
-    public String getUpdateInformation() {
-      return stringBuilder.toString();
-    }
-  }
-
-  class MyProgressBar implements ObservableObject {
-    private List<ProgressObserver> observerList = new ArrayList<ProgressObserver>();
-
-    @Override
-    public void addObserver(ProgressObserver progressObserver) {
-      observerList.add(progressObserver);
-    }
-
-    public void update() {
-      for (int i = 0; i < 10; i++) {
-        for (ProgressObserver observer : observerList) {
-          observer.update(i + 1);
-        }
+  public void progressUpdate() throws IOException {
+    URLConnection connection = new URL("http://www.sutincarrental.com/wp-content/uploads/2010/03/Honda-City-Sutin-Car-Rental.jpg").openConnection();
+    final StringBuilder stringBuilder = new StringBuilder();
+    agent.addObserver(new ProgressObserver() {
+      @Override
+      public void update(int value) {
+        stringBuilder.append(value);
       }
-    }
+    });
+    agent.download(connection.getInputStream(), new FileOutputStream(new File("downloadedPicture.jpg")), connection.getContentLength());
+    assertThat(stringBuilder.toString(), startsWith("123456789"));
+    assertThat(stringBuilder.toString(), endsWith("9899100"));
   }
 }

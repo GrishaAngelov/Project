@@ -33,6 +33,6 @@ public class Main {
     jProgressBar.setStringPainted(true);
     agentUI.add(jProgressBar);
     downloadAgent.addObserver(progressBar);
-    downloadButton.addActionListener(new DownloadButtonHandler(addressBar, downloadAgent));
+    downloadButton.addActionListener(new DownloadButtonHandler(addressBar, downloadAgent,new JFileChooser()));
   }
 }

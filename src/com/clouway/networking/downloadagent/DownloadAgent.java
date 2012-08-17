@@ -13,47 +13,50 @@ import java.util.List;
 public class DownloadAgent implements ObservableObject {
   private List<ProgressObserver> progressObserverList = new ArrayList<ProgressObserver>();
   private int size = 0;
-  private int maxValue;
 
+  /**
+   * Adds an observer that will listen for change in the progress status
+   *
+   * @param progressObserver
+   */
   @Override
   public void addObserver(ProgressObserver progressObserver) {
     progressObserverList.add(progressObserver);
   }
 
+  /**
+   * Downloads a specific web resource
+   *
+   * @param inputStream   - from the resource
+   * @param outputStream  - to store downloaded content
+   * @param contentLength - size of resource content
+   * @throws IOException if an error occur during downloading
+   */
   public void download(InputStream inputStream, OutputStream outputStream, int contentLength) throws IOException {
     final InputStream is = inputStream;
     final OutputStream os = outputStream;
 
     size = contentLength;
-    maxValue = size;
 
-    for (ProgressObserver progressObserver : progressObserverList) {
-      progressObserver.setMaxValue(maxValue);
-    }
-
-    Thread updateThread = new Thread(new Runnable() {
-      @Override
-      public void run() {
-        try {
-          for (int i = 0; i < maxValue; i++) {
-            for (ProgressObserver progressObserver : progressObserverList) {
-              os.write(is.read());
-              progressObserver.update((maxValue - size) + 1);
-              size--;
-            }
+    try {
+      int currentReadByte;
+      int currentProgress;
+      int lastProgress = 0;
+      double countByte = 1.0;
+      while ((currentReadByte = is.read()) != -1) {
+        os.write(currentReadByte);
+        for (ProgressObserver progressObserver : progressObserverList) {
+          currentProgress = (int) ((countByte / size) * 100.0);
+          if (currentProgress != lastProgress) {
+            progressObserver.update(currentProgress);
+            lastProgress = currentProgress;
           }
-        } catch (IOException e) {
-          e.printStackTrace();
-        } finally {
-          try {
-            is.close();
-            os.close();
-          } catch (IOException e) {
-            e.printStackTrace();
-          }
+          countByte++;
         }
       }
-    });
-    updateThread.start();
+    } finally {
+      is.close();
+      os.close();
+    }
   }
 }
