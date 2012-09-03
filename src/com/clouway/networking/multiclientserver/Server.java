@@ -16,11 +16,10 @@ import java.util.Date;
 import java.util.Hashtable;
 import java.util.Map;
 
-public class Server extends JFrame implements Runnable {
+public class Server {
 
   private int port;
-  private JTextArea serverDisplay;
-  private JButton stopServerButton;
+  private ServerDisplay serverDisplay;
   private ServerSocket serverSocket;
   private Socket socket;
   private ObjectOutputStream objectOutputStream;
@@ -29,21 +28,26 @@ public class Server extends JFrame implements Runnable {
   private Map<Socket, ObjectOutputStream> clients = new Hashtable<Socket, ObjectOutputStream>();
 
   /**
-   * Constructor takes as parameter specified port number
+   * Constructor takes as parameter specified port number and display
    *
    * @param port
+   * @param display
    */
-  public Server(int port) {
+  public Server(int port, ServerDisplay display) {
     this.port = port;
-    createServerDisplay();
-    createStopButton();
+    this.serverDisplay = display;
+    display.addListener(new StopServerListener() {
+      @Override
+      public void onStopServer() {
+       stopServer();
+      }
+    });
   }
 
   /**
-   * Starts the server thread
+   * Run the server
    */
-  @Override
-  public void run() {
+  public void runServer() {
     try {
       serverSocket = new ServerSocket(port);
     } catch (IOException ex) {
@@ -51,11 +55,11 @@ public class Server extends JFrame implements Runnable {
     }
     while (!stop) {
       try {
-        serverDisplay.append("\nwaiting for client...");
+        serverDisplay.writeMessage("\nwaiting for client...");
         socket = serverSocket.accept();
 
         currentClientNumber++;
-        serverDisplay.append("\nconnected");
+        serverDisplay.writeMessage("\nconnected");
 
         objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
         clients.put(socket, objectOutputStream);
@@ -66,61 +70,26 @@ public class Server extends JFrame implements Runnable {
 
         objectOutputStream.writeObject("\nreceived: " + new Date().toString());
         objectOutputStream.flush();
-        serverDisplay.append("\ndata sent\n");
+        serverDisplay.writeMessage("\ndata sent\n");
       } catch (IOException ex) {
-        serverDisplay.append("\nconnection is closed");
+        serverDisplay.writeMessage("\nconnection is closed");
 
       }
     }
-
   }
 
-  /**
-   * Creates server text area
-   */
-  private void createServerDisplay() {
-    serverDisplay = new JTextArea();
-    JScrollPane scrollPane = new JScrollPane(serverDisplay);
-    serverDisplay.setEditable(false);
-    add(scrollPane, BorderLayout.CENTER);
-  }
-
-  /**
-   * Creates stopServer button
-   */
-  private void createStopButton() {
-    stopServerButton = new JButton("StopServer");
-    stopServerButton.addActionListener(new ActionListener() {
-
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        closeConnection();
-
-      }
-    });
-    add(stopServerButton, BorderLayout.SOUTH);
-  }
-
-  /**
-   * Close the connection with clients
-   */
-  public void closeConnection() {
+  public void stopServer(){
+    stop = true;
+    serverDisplay.close();
     try {
-      stopServerButton.setEnabled(false);
-      objectOutputStream.close();
-      serverSocket.close();
-      socket.close();
-      stop = true;
-      closeServerWindow();
-    } catch (IOException ex) {
-      ex.printStackTrace();
-    }
-  }
+     if(objectOutputStream!=null){
+       objectOutputStream.close();
+       socket.close();
+       serverSocket.close();
+     }
 
-  /**
-   * Releases all of the resources used by this window
-   */
-  private void closeServerWindow() {
-    super.dispose();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
   }
 }

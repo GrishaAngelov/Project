@@ -7,12 +7,14 @@ import javax.swing.*;
  */
 public class ServerMain {
   public static void main(String[] args) {
-    Server server = new Server(1589);
-    server.setTitle("Server");
-    server.setVisible(true);
-    server.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    server.setSize(300, 200);
-
-    new Thread(server).start();
+    ServerDisplay display = new SwingServerDisplay();
+    final Server server = new Server(1589, display);
+    display.show();
+    new Thread(new Runnable() {
+      @Override
+      public void run() {
+        server.runServer();
+      }
+    }).start();
   }
 }

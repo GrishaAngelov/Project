@@ -4,90 +4,69 @@ package com.clouway.networking.clientserver;
  * @author Grisha Angelov <grisha.angelov@clouway.com>
  */
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Date;
 
-public class Server extends JFrame {
+public class Server {
+
+  /**
+   * This Server class is responsible for providing current date and time to only one client at time.
+   */
+
 
   private int port;
-  private JTextArea serverDisplay;
-  private JButton stopServerButton;
+  private Display display;
   private ServerSocket serverSocket;
   private Socket socket;
   private ObjectOutputStream objectOutputStream;
 
   /**
-   * Takes as parameter specified port number
+   * Constructor takes as parameters specified port number and display, which contains
+   * ui of the server.In that way we can separate the ui from the logic;
    *
    * @param port
+   * @param display
    */
-  public Server(int port) {
+  public Server(int port, Display display) {
     this.port = port;
-    createServerDisplay();
-    createStopButton();
+    this.display = display;
+
+    display.addListener(new StopServerListener() {
+      @Override
+      public void onStopServer() {
+        stopServer();
+      }
+    });
   }
 
   /**
-   * Starts the server application
+   * Run the server application
    *
    * @throws IOException
    */
   public void runServer() throws IOException {
     serverSocket = new ServerSocket(port);
-    serverDisplay.append("waiting...");
+    display.writeMessage("waiting...");
     socket = serverSocket.accept();
-    serverDisplay.append("\nconnected");
+    display.writeMessage("\nconnected");
     objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
-    objectOutputStream.writeObject("ServerMessage");
+    objectOutputStream.writeObject("\nreceived: "+new Date().toString());
     objectOutputStream.flush();
-    serverDisplay.append("\ndata sent");
-
+    display.writeMessage("\ndata sent");
   }
 
-  /**
-   * Creates server text area
-   */
-  private void createServerDisplay() {
-    serverDisplay = new JTextArea();
-    serverDisplay.setEditable(false);
-    add(serverDisplay, BorderLayout.CENTER);
+  public void stopServer() {
+    try {
+      objectOutputStream.close();
+      serverSocket.close();
+      socket.close();
+      display.close();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
   }
 
-  /**
-   * Creates a server shutdown button
-   */
-  private void createStopButton() {
-    stopServerButton = new JButton("StopServer");
-    stopServerButton.addActionListener(new ActionListener() {
-
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        try {
-          stopServerButton.setEnabled(false);
-          objectOutputStream.close();
-          serverSocket.close();
-          socket.close();
-          serverDisplay.append("\nconnection closed");
-          closeServerWindow();
-        } catch (IOException ex) {
-          ex.printStackTrace();
-        }
-
-      }
-    });
-    add(stopServerButton, BorderLayout.SOUTH);
-  }
-
-  /**
-   * Releases all of the resources used by this window
-   */
-  private void closeServerWindow() {
-    super.dispose();
-  }
 }

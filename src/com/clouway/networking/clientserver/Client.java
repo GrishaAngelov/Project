@@ -4,16 +4,15 @@ package com.clouway.networking.clientserver;
  * @author Grisha Angelov <grisha.angelov@clouway.com>
  */
 
-import javax.swing.*;
-import java.awt.*;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.Socket;
 
-public class Client extends JFrame {
+public class Client {
 
   private int port;
-  private JTextArea clientDisplay;
+  private String host;
+  private Display clientDisplay;
   private Socket socket;
   private ObjectInputStream objectInputStream;
   private String data;
@@ -23,45 +22,35 @@ public class Client extends JFrame {
    *
    * @param port - used port by the server
    */
-  public Client(int port) {
+  public Client(String host, int port, Display display) {
+    this.host = host;
     this.port = port;
-    createClientDisplay();
+    this.clientDisplay = display;
   }
 
   /**
    * Starts the client application
    *
    * @throws IOException if an I/O error occurs when creating the socket.
-   * @throws ClassNotFoundException when class of a serialized object cannot be found.
+   * @throws ClassNotFoundException when class of a serialized object cannot
+   * be found.
    */
-  public void runClient() throws IOException, ClassNotFoundException {
+  public void connect() throws IOException, ClassNotFoundException {
     try {
-      socket = new Socket("127.0.0.1", port);
-      clientDisplay.append("connecting...");
+      socket = new Socket(host, port);
+      clientDisplay.writeMessage("connecting...");
       objectInputStream = new ObjectInputStream(socket.getInputStream());
-      clientDisplay.append("\nconnected");
+      clientDisplay.writeMessage("\nconnected");
       data = objectInputStream.readObject().toString();
-      clientDisplay.append("\nreceived: " + data);
+      clientDisplay.writeMessage(data);
     } finally {
       objectInputStream.close();
       socket.close();
-      clientDisplay.append("\nconnection closed");
+      clientDisplay.writeMessage("\nconnection closed");
     }
   }
 
-  /**
-   * Creates client text area
-   */
-  private void createClientDisplay() {
-    clientDisplay = new JTextArea();
-    clientDisplay.setEditable(false);
-    add(clientDisplay, BorderLayout.CENTER);
-  }
-
-  /**
-   * @return received data
-   */
-  public String getData() {
+  public String getData(){
     return data;
   }
 }

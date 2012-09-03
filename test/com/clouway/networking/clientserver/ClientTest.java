@@ -7,41 +7,42 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Date;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertTrue;
 
 /**
  * @author Grisha Angelov <grisha.angelov@clouway.com>
  */
 public class ClientTest {
+  private int PORT = 1580;
+  private String HOST = "127.0.0.1";
   private Client client;
-  private SimpleServer server;
+  private ServerApplication server;
+  private MockClientDisplay clientDisplay = new MockClientDisplay();
 
   @Before
   public void setUp() {
-    server = new SimpleServer(1580);
-    new Thread(new Runnable() {
-      @Override
-      public void run() {
-        server.runServer();
-      }
-    }).start();
-    client = new Client(1580);
+    server = new ServerApplication(PORT);
+    client = new Client(HOST, PORT, clientDisplay);
   }
 
   @Test
-  public void clientReceiveData() throws ClassNotFoundException, IOException {
-    client.runClient();
-    assertEquals("ServerMessage", client.getData());
+  public void clientShouldReceiveDataWhenConnectToServer() throws ClassNotFoundException, IOException {
+    startServer();
+    startClient();
+    assertTrue(client.getData().startsWith("received: "));
+    assertEquals("\nconnection closed", clientDisplay.msg);
   }
 
-  class SimpleServer {
+  class ServerApplication {
     private int port;
     private ServerSocket serverSocket;
     private Socket socket;
     private ObjectOutputStream objectOutputStream;
 
-    SimpleServer(int port) {
+    ServerApplication(int port) {
       this.port = port;
     }
 
@@ -50,7 +51,7 @@ public class ClientTest {
         serverSocket = new ServerSocket(port);
         socket = serverSocket.accept();
         objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
-        objectOutputStream.writeObject("ServerMessage");
+        objectOutputStream.writeObject("received: "+new Date().toString());
         objectOutputStream.flush();
       } catch (IOException e) {
         e.printStackTrace();
@@ -64,5 +65,47 @@ public class ClientTest {
         }
       }
     }
+  }
+
+  private void startServer() {
+    new Thread(new Runnable() {
+      @Override
+      public void run() {
+        server.runServer();
+      }
+    }).start();
+    try {
+      Thread.sleep(50);
+    } catch (InterruptedException e) {
+      e.printStackTrace();
+    }
+  }
+
+  class MockClientDisplay implements Display {
+    private String msg;
+
+    public boolean isClosed = false;
+
+    @Override
+    public void show() {
+    }
+
+    @Override
+    public void writeMessage(String msg) {
+      this.msg = msg;
+    }
+
+    @Override
+    public void close() {
+      isClosed = true;
+    }
+
+    @Override
+    public void addListener(StopServerListener listener) {
+    }
+  }
+
+  private void startClient() throws ClassNotFoundException, IOException {
+    client.connect();
   }
 }

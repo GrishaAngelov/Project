@@ -1,6 +1,5 @@
 package com.clouway.networking.clientserver;
 
-import javax.swing.*;
 import java.io.IOException;
 
 /**
@@ -8,11 +7,9 @@ import java.io.IOException;
  */
 public class ClientMain {
   public static void main(String[] args) throws IOException, ClassNotFoundException {
-    Client client = new Client(1589);
-    client.setTitle("Client");
-    client.setVisible(true);
-    client.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    client.setSize(300, 200);
-    client.runClient();
+    Display clientDisplay = new SwingClientDisplay();
+    Client client = new Client("127.0.0.1", 1589, clientDisplay);
+    clientDisplay.show();
+    client.connect();
   }
 }
