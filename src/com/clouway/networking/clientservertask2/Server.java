@@ -4,94 +4,76 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Hashtable;
-import java.util.Map;
+import java.util.List;
 
 /**
  * @author Grisha Angelov <grisha.angelov@clouway.com>
  */
 public class Server {
-  private DisplayController serverDisplay;
-  private int port;
-  private DateProvider dateProvider;
-  private boolean stop = false;
-  private PrintWriter printWriter;
   private ServerSocket serverSocket;
-  private Socket socket;
-  private int currentClientNumber = 0;
-  private Map<Socket, PrintWriter> clients = Collections.synchronizedMap(new Hashtable<Socket, PrintWriter>());
+  private List<UI> displays;
+  private List<Socket> connectedClients = Collections.synchronizedList(new ArrayList<Socket>());
 
-  public Server(int port, DateProvider dateProvider, DisplayController serverDisplay) {
-    this.port = port;
-    this.dateProvider = dateProvider;
-    this.serverDisplay = serverDisplay;
-    serverDisplay.addListener(new StopServerListener() {
-      @Override
-      public void onStopServer() {
-        try {
-          stopServer();
-        } catch (IOException e) {
-          e.printStackTrace();
-        }
-      }
-    });
-
+  public Server(List<UI> displays) {
+    this.displays = displays;
   }
 
-  public void runServer() throws IOException {
-    try {
-      serverSocket = new ServerSocket(port);
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
+  public void runServer(int port) throws IOException {
 
-
-    /*try {
-      socket = serverSocket.accept();
-    } catch (IOException e) {
-    }*/
+    serverSocket = new ServerSocket(port);
 
     new Thread(new Runnable() {
       @Override
       public void run() {
-        while (!stop) {
+
+        while (Thread.currentThread().isAlive()) {
+
           try {
-//            serverDisplay.writeMessage("\nwaiting");
-            socket = serverSocket.accept();
-            currentClientNumber++;
-            serverDisplay.writeMessage("\nconnected");
-            if (socket != null) {
-              printWriter = new PrintWriter(socket.getOutputStream());
+            notifyDisplaysWith("\nwaiting");
 
-              clients.put(socket, printWriter);
+            Socket socket = serverSocket.accept();
 
-              printWriter.write("\nyou are: " + currentClientNumber + "\n");
-              printWriter.flush();
+            notifyDisplaysWith("\nconnected");
 
-              new Thread(new Notificator(clients)).start();
+            PrintWriter writer = new PrintWriter(socket.getOutputStream());
 
-              printWriter.write(dateProvider.getCurrentDate());
-              printWriter.flush();
+            writer.println("you are " + (connectedClients.size() + 1));
 
-              serverDisplay.writeMessage("\ndata sent");
-            }
+            writer.flush();
+
+            notifyAllConnectedClientsForNewClientConnection();
+
+            connectedClients.add(socket);
+
           } catch (IOException e) {
+
           }
         }
       }
+
     }).start();
   }
 
+  private void notifyAllConnectedClientsForNewClientConnection() throws IOException {
+    for (Socket clientSocket : connectedClients) {
 
-  public void stopServer() throws IOException {
-    serverDisplay.close();
-    stop = true;
-    if (socket != null) {
-      printWriter.close();
-      socket.close();
+      PrintWriter printWriter = new PrintWriter(clientSocket.getOutputStream());
+
+      printWriter.println("Client #" + (connectedClients.size() + 1) + " has connected");
+
+      printWriter.flush();
     }
+  }
+
+  private void notifyDisplaysWith(String message) {
+    for (UI display : displays) {
+      display.displayMessage(message);
+    }
+  }
+
+  public void closeServer() throws IOException {
     serverSocket.close();
-    serverDisplay.writeMessage("\nconnection closed");
   }
 }

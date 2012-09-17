@@ -1,176 +1,117 @@
 package com.clouway.networking.clientservertask2;
 
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.InputStream;
 import java.net.Socket;
-import java.util.Calendar;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertTrue;
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 /**
  * @author Grisha Angelov <grisha.angelov@clouway.com>
  */
 public class ServerTest {
-
-  private int PORT = 1580;
-  private String HOST = "127.0.0.1";
   private Server server;
-  private ClientApplication client;
-  private MockDisplay serverDisplay = new MockDisplay();
-  private MockDisplay clientDisplay = new MockDisplay();
-  private DateProvider dateProvider;
+  private List<UI> displayList;
+  private List<Socket> clientList = new ArrayList<Socket>();
+  final private int PORT = 1850;
+  final String HOST = "127.0.0.1";
 
   @Before
   public void setUp() throws IOException {
-    dateProvider = new DateProvider() {
-      @Override
-      public String getCurrentDate() {
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.DAY_OF_MONTH, 1);
-        calendar.set(Calendar.MONTH, 5);
-        calendar.set(Calendar.YEAR, 2012);
-        return calendar.getTime().toString();
-      }
-    };
-    server = new Server(1580, dateProvider, serverDisplay);
-    client = new ClientApplication(HOST, PORT, clientDisplay);
+    displayList = new ArrayList<UI>();
+    server = new Server(displayList);
+    server.runServer(PORT);
   }
 
   @After
-  public void tearDown() throws IOException {
-    stopServer();
+  public void tearDown() throws IOException, InterruptedException {
+    server.closeServer();
+    Thread.sleep(10);
   }
 
   @Test
-  public void serverShouldRespondWhenClientIsConnected() throws ClassNotFoundException, IOException, InterruptedException {
-    runServer();
-    connectClient();
+  public void serverDisplayMessageAboutAcceptedClientConnection() throws IOException, InterruptedException {
+    UI ui = mock(UI.class);
+    displayList.add(ui);
+    new Socket("localhost", PORT);
     Thread.sleep(50);
-    assertEquals("\ndata sent", serverDisplay.msg);
-    assertEquals("connection closed", clientDisplay.msg);
+    verify(ui, times(1)).displayMessage("\nconnected");
   }
 
   @Test
-  public void serverShouldCloseUiWhenServerIsStopped() throws ClassNotFoundException, IOException {
-    server.runServer();
-    server.stopServer();
-    assertTrue(serverDisplay.isClosed);
+  public void serverSendMessageToFirstClientThatHeIsFirst() throws IOException, InterruptedException {
+    createClients(1);
+    assertServerResponsesToConnectedClientWith("you are " + clientList.size(), clientList.get(0));
   }
 
   @Test
-  public void displayControllerShouldStopTheServer() throws IOException, ClassNotFoundException, InterruptedException {
-    runServer();
-    connectClient();
-    serverDisplay.stopServerListener.onStopServer();
-    assertTrue(serverDisplay.isClosed);
-    connectClient();
+  public void serverSendMessageToSecondClientThatHeIsSecond() throws IOException, InterruptedException {
+    createClients(2);
+    assertServerResponsesToConnectedClientWith("you are " + clientList.size(), clientList.get(1));
   }
 
-  private void stopServer() throws IOException {
-    server.stopServer();
+  @Test
+  public void
+  serverSendMessageToFirstClientThatSecondClientHasConnected() throws Exception {
+    createClients(2);
+    assertServerResponsesToConnectedClientWith("Client #" + clientList.size() + " has connected", clientList.get(0));
   }
 
-  private class MockDisplay implements DisplayController {
-    private String msg;
-    private boolean isClosed = false;
+  @Test
+  public void serverSendNotificationToFirstTwoClients() throws Exception {
+    createClients(3);
+    assertServerResponsesToConnectedClientWith("Client #" + clientList.size() + " has connected", clientList.get(0));
+    assertServerResponsesToConnectedClientWith("Client #" + clientList.size() + " has connected", clientList.get(1));
+  }
 
-    public StopServerListener stopServerListener;
+  private void createClients(int numberOfClients) throws IOException {
 
-    @Override
-    public void writeMessage(String msg) {
+    for (int i = 0; i < numberOfClients; i++) {
 
-      this.msg = msg;
-    }
+      Socket socket = new Socket(HOST, PORT);
 
-    @Override
-    public void clearDisplay() {
-    }
-
-    @Override
-    public void close() {
-      isClosed = true;
-    }
-
-    @Override
-    public void addListener(StopServerListener stopServerListener) {
-      this.stopServerListener = stopServerListener;
-    }
-
-
-    @Override
-    public void addListener(ConnectionListener connectionListener) {
+      clientList.add(socket);
 
     }
   }
 
-  class ClientApplication {
-    private int port;
-    private String host;
-    private String data;
-    private Socket socket;
-    private Scanner scanner;
-
-    private DisplayController displayController;
-
-    ClientApplication(String host, int port, DisplayController displayController) {
-      this.host = host;
-      this.port = port;
-      this.displayController = displayController;
-    }
-
-    public void connect() throws IOException, ClassNotFoundException {
-      try {
-        socket = new Socket(host, port);
-        displayController.writeMessage("\nconnecting...");
-        scanner = new Scanner(new InputStreamReader(socket.getInputStream()));
-        displayController.writeMessage("\nconnected");
-        data = scanner.nextLine();
-        displayController.writeMessage("\nreceived: " + data);
-      } finally {
-        scanner.close();
-        socket.close();
-        displayController.writeMessage("connection closed");
-      }
-    }
+  private void assertServerResponsesToConnectedClientWith(String expectedResponse, Socket connectedClient) throws IOException, InterruptedException {
+    StringBuilder stringBuilder = new StringBuilder();
+    readDataFromServer(connectedClient, stringBuilder);
+    assertThat(stringBuilder.toString(), is(expectedResponse));
   }
 
-  private void runServer() {
+  private void readDataFromServer(final Socket clientSocket, final StringBuilder builder) throws IOException, InterruptedException {
+
     new Thread(new Runnable() {
       @Override
       public void run() {
         try {
-          server.runServer();
+          while (true) {
+            InputStream inputStream = clientSocket.getInputStream();
+
+            Scanner scanner = new Scanner(inputStream);
+
+            while (scanner.hasNext()) {
+              builder.delete(0, builder.length());
+              builder.append(scanner.nextLine());
+            }
+          }
         } catch (IOException e) {
-          e.printStackTrace();
         }
       }
     }).start();
+    Thread.sleep(50);
   }
-
-  private void connectClient() {
-    new Thread(new Runnable() {
-      @Override
-      public void run() {
-        try {
-          Thread.sleep(10);
-          client.connect();
-        } catch (IOException e) {
-          e.printStackTrace();
-        } catch (InterruptedException e) {
-          e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-          e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        }
-      }
-    }).start();
-  }
-
-
 }

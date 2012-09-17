@@ -1,16 +1,17 @@
 package com.clouway.networking.clientservertask1;
 
-/**
- * @author Grisha Angelov <grisha.angelov@clouway.com>
- */
-
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
+/**
+ * @author: Grisha Angelov <grisha.angelov@clouway.com>
+ */
 public class ServerMain {
-  public static void main(String[] args) throws IOException {
-    DisplayController display = new ServerDisplay();
-    DateProvider dateProvider = new DateProvider();
-    Server server = new Server(1589, dateProvider, display);
-    server.runServer();
-  }
+    public static void main(String[] args) throws IOException {
+        List<UI> serverUIList = new ArrayList<UI>();
+        serverUIList.add(new ServerUI());
+        Server server = new Server(serverUIList, new DateProvider());
+        server.runServer(1580);
+    }
 }

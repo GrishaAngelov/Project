@@ -1,77 +1,32 @@
 package com.clouway.networking.clientservertask1;
 
-/**
- * @author Grisha Angelov <grisha.angelov@clouway.com>
- */
-
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.Socket;
+import java.util.Scanner;
 
+/**
+ * @author: Grisha Angelov <grisha.angelov@clouway.com>
+ */
 public class Client {
-
-  private int port;
-  private String host;
-  private DisplayController clientDisplay;
+  public UI clientUI;
   private Socket socket;
-  private BufferedReader reader;
-  private String data;
+  private Scanner scanner;
 
-  /**
-   * Takes as parameter specified port number for connection to server
-   *
-   * @param port - used port by the server
-   */
-  public Client(String host, int port, DisplayController display) {
-    this.host = host;
-    this.port = port;
-    this.clientDisplay = display;
-    display.addListener(new ConnectionListener() {
-      @Override
-      public void onClientConnection() {
-        try {
-          connect();
-        } catch (IOException e) {
-          e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-          e.printStackTrace();
-        }
-      }
-    });
+
+  public Client(UI clientUI) {
+    this.clientUI = clientUI;
   }
 
-
-  /**
-   * Starts the client application
-   *
-   * @throws java.io.IOException if an I/O error occurs when creating the socket.
-   * @throws ClassNotFoundException when class of a serialized object cannot
-   * be found.
-   */
-  public void connect() throws IOException, ClassNotFoundException {
-    try {
-      clientDisplay.clearDisplay();
-      clientDisplay.writeMessage("connecting...");
-      socket = new Socket(host, port);
-      reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-      clientDisplay.writeMessage("\nconnected");
-      data = reader.readLine();
-      clientDisplay.writeMessage("\nreceived: "+data);
-    } finally {
-        stopClient();
-    }
+  public void connect(String host, int port) throws IOException {
+    socket = new Socket(host, port);
+    scanner = new Scanner(socket.getInputStream());
+    clientUI.displayMessage(scanner.nextLine());
+    close();
   }
 
-  public String getData(){
-    return data;
-  }
-
-  public void stopClient() throws IOException {
-    if(socket!=null){
-      reader.close();
-      socket.close();
-      clientDisplay.writeMessage("\nconnection closed");
-    }
+  public void close() throws IOException {
+    scanner.close();
+    socket.close();
+    clientUI.displayMessage("\nconnection is closed");
   }
 }
