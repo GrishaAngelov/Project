@@ -52,33 +52,34 @@ public class ServerTest {
   @Test
   public void serverSendMessageToFirstClientThatHeIsFirst() throws IOException, InterruptedException {
     createClients(1);
-    assertServerResponsesToConnectedClientWith("you are " + clientList.size(), clientList.get(0));
+    assertServerResponsesToConnectedClientWith("You are " + clientList.size(), clientList.get(0));
   }
 
   @Test
   public void serverSendMessageToSecondClientThatHeIsSecond() throws IOException, InterruptedException {
     createClients(2);
-    assertServerResponsesToConnectedClientWith("you are " + clientList.size(), clientList.get(1));
+    assertServerResponsesToConnectedClientWith("You are " + clientList.size(), clientList.get(1));
   }
 
   @Test
   public void
   serverSendMessageToFirstClientThatSecondClientHasConnected() throws Exception {
     createClients(2);
-    assertServerResponsesToConnectedClientWith("Client #" + clientList.size() + " has connected", clientList.get(0));
+    assertServerResponsesToConnectedClientWith("Connected clients: "+ clientList.size(), clientList.get(0));
   }
 
   @Test
   public void serverSendNotificationToFirstTwoClients() throws Exception {
     createClients(3);
-    assertServerResponsesToConnectedClientWith("Client #" + clientList.size() + " has connected", clientList.get(0));
-    assertServerResponsesToConnectedClientWith("Client #" + clientList.size() + " has connected", clientList.get(1));
+    assertServerResponsesToConnectedClientWith("Connected clients: "+ clientList.size(), clientList.get(0));
+    assertServerResponsesToConnectedClientWith("Connected clients: "+ clientList.size(), clientList.get(1));
   }
 
-  private void createClients(int numberOfClients) throws IOException {
+  private void createClients(int numberOfClients) throws IOException, InterruptedException {
 
     for (int i = 0; i < numberOfClients; i++) {
 
+      Thread.sleep(50);
       Socket socket = new Socket(HOST, PORT);
 
       clientList.add(socket);

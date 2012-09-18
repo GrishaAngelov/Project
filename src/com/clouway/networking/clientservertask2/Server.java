@@ -20,48 +20,88 @@ public class Server {
     this.displays = displays;
   }
 
-  public void runServer(int port) throws IOException {
+  public void runServer(final int port) throws IOException {
 
-    serverSocket = new ServerSocket(port);
+    synchronized (connectedClients) {
 
-    new Thread(new Runnable() {
-      @Override
-      public void run() {
-
-        while (Thread.currentThread().isAlive()) {
-
+      new Thread(new Runnable() {
+        @Override
+        public void run() {
           try {
-            notifyDisplaysWith("\nwaiting");
-
-            Socket socket = serverSocket.accept();
-
-            notifyDisplaysWith("\nconnected");
-
-            PrintWriter writer = new PrintWriter(socket.getOutputStream());
-
-            writer.println("you are " + (connectedClients.size() + 1));
-
-            writer.flush();
-
-            notifyAllConnectedClientsForNewClientConnection();
-
-            connectedClients.add(socket);
-
-          } catch (IOException e) {
+            Thread.sleep(200);
+          } catch (InterruptedException ignored) {
 
           }
-        }
-      }
 
-    }).start();
+          while (true) {
+            for (int i = 0; i < connectedClients.size(); i++) {
+              try {
+                if (connectedClients.get(i).getInputStream().read() == -1) {
+                  connectedClients.remove(i);
+                  notifyAllConnectedClients("Client has disconnected\nClients left: "+connectedClients.size());
+                }
+              } catch (IOException ignored) {
+
+              }
+            }
+            try {
+              Thread.sleep(300);
+            } catch (InterruptedException e) {
+
+            }
+          }
+        }
+      }).start();
+    }
+
+
+    synchronized (connectedClients) {
+      new Thread(new Runnable() {
+        @Override
+        public void run() {
+          try {
+            serverSocket = new ServerSocket(port);
+          } catch (IOException ignored) {
+
+          }
+
+          while (Thread.currentThread().isAlive()) {
+
+            try {
+              notifyDisplaysWith("\nwaiting");
+
+              Socket socket = serverSocket.accept();
+
+              socket.setSoTimeout(300);
+
+              notifyDisplaysWith("\nconnected");
+
+              PrintWriter writer = new PrintWriter(socket.getOutputStream());
+
+              writer.println("You are " + (connectedClients.size() + 1));
+
+              writer.flush();
+
+              notifyAllConnectedClients("Connected clients: " + (connectedClients.size() + 1));
+
+              connectedClients.add(socket);
+
+            } catch (IOException ignored) {
+
+            }
+          }
+        }
+
+      }).start();
+    }
   }
 
-  private void notifyAllConnectedClientsForNewClientConnection() throws IOException {
+  private void notifyAllConnectedClients(String message) throws IOException {
     for (Socket clientSocket : connectedClients) {
 
       PrintWriter printWriter = new PrintWriter(clientSocket.getOutputStream());
 
-      printWriter.println("Client #" + (connectedClients.size() + 1) + " has connected");
+      printWriter.println(message);
 
       printWriter.flush();
     }
@@ -75,5 +115,6 @@ public class Server {
 
   public void closeServer() throws IOException {
     serverSocket.close();
+
   }
 }

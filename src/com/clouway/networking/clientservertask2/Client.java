@@ -1,6 +1,7 @@
 package com.clouway.networking.clientservertask2;
 
 import java.io.IOException;
+import java.net.ConnectException;
 import java.net.Socket;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
@@ -19,6 +20,7 @@ public class Client {
   }
 
   public void connect(String host, int port) throws IOException {
+    try{
     socket = new Socket(host, port);
     scanner = new Scanner(socket.getInputStream());
     try {
@@ -29,10 +31,15 @@ public class Client {
       clientUI.displayMessage("\nconnection is closed");
       close();
     }
+    }catch (ConnectException e){
+      clientUI.displayMessage("Server is not started");
+    }
+
   }
 
   public void close() throws IOException {
-    scanner.close();
-    socket.close();
+    if (socket != null) {
+      socket.close();
+    }
   }
 }
