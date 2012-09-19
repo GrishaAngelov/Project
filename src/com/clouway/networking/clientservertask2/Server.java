@@ -15,6 +15,8 @@ public class Server {
   private ServerSocket serverSocket;
   private List<UI> displays;
   private List<Socket> connectedClients = Collections.synchronizedList(new ArrayList<Socket>());
+  private ConnectedClientsNotifier connectedClientsNotifier = new ConnectedClientsNotifier();
+  private ServerDisplayNotifier serverDisplayNotifier = new ServerDisplayNotifier();
 
   public Server(List<UI> displays) {
     this.displays = displays;
@@ -38,7 +40,7 @@ public class Server {
               try {
                 if (connectedClients.get(i).getInputStream().read() == -1) {
                   connectedClients.remove(i);
-                  notifyAllConnectedClients("Client has disconnected\nClients left: "+connectedClients.size());
+                  notifyAllConnectedClients(connectedClientsNotifier.notifyForClientDisconnection()+connectedClients.size());
                 }
               } catch (IOException ignored) {
 
@@ -65,24 +67,25 @@ public class Server {
 
           }
 
-          while (Thread.currentThread().isAlive()) {
+          while (!Thread.currentThread().isInterrupted()) {
 
             try {
-              notifyDisplaysWith("\nwaiting");
+              notifyDisplaysWith(serverDisplayNotifier.notifyWaitingForConnection());
 
               Socket socket = serverSocket.accept();
 
               socket.setSoTimeout(300);
 
-              notifyDisplaysWith("\nconnected");
+              notifyDisplaysWith(serverDisplayNotifier.notifyForConnectedClient());
 
               PrintWriter writer = new PrintWriter(socket.getOutputStream());
 
-              writer.println("You are " + (connectedClients.size() + 1));
+              writer.println(connectedClientsNotifier.notifyConnectedClientForHisCounter() + (connectedClients.size() + 1));
+
 
               writer.flush();
 
-              notifyAllConnectedClients("Connected clients: " + (connectedClients.size() + 1));
+              notifyAllConnectedClients(connectedClientsNotifier.notifyForNewConnection() + (connectedClients.size() + 1));
 
               connectedClients.add(socket);
 

@@ -26,6 +26,7 @@ public class ServerTest {
   private List<Socket> clientList = new ArrayList<Socket>();
   final private int PORT = 1850;
   final String HOST = "127.0.0.1";
+  private ConnectedClientsNotifier connectedClientsNotifier = new ConnectedClientsNotifier();
 
   @Before
   public void setUp() throws IOException {
@@ -46,40 +47,39 @@ public class ServerTest {
     displayList.add(ui);
     new Socket("localhost", PORT);
     Thread.sleep(50);
-    verify(ui, times(1)).displayMessage("\nconnected");
+    verify(ui, times(1)).displayMessage(new ServerDisplayNotifier().notifyWaitingForConnection());
   }
 
   @Test
   public void serverSendMessageToFirstClientThatHeIsFirst() throws IOException, InterruptedException {
     createClients(1);
-    assertServerResponsesToConnectedClientWith("You are " + clientList.size(), clientList.get(0));
+    assertServerResponsesToConnectedClientWith(connectedClientsNotifier.notifyConnectedClientForHisCounter() + clientList.size(), clientList.get(0));
   }
 
   @Test
   public void serverSendMessageToSecondClientThatHeIsSecond() throws IOException, InterruptedException {
     createClients(2);
-    assertServerResponsesToConnectedClientWith("You are " + clientList.size(), clientList.get(1));
+    assertServerResponsesToConnectedClientWith(connectedClientsNotifier.notifyConnectedClientForHisCounter() + clientList.size(), clientList.get(1));
   }
 
   @Test
   public void
   serverSendMessageToFirstClientThatSecondClientHasConnected() throws Exception {
     createClients(2);
-    assertServerResponsesToConnectedClientWith("Connected clients: "+ clientList.size(), clientList.get(0));
+    assertServerResponsesToConnectedClientWith(connectedClientsNotifier.notifyForNewConnection() + clientList.size(), clientList.get(0));
   }
 
   @Test
   public void serverSendNotificationToFirstTwoClients() throws Exception {
     createClients(3);
-    assertServerResponsesToConnectedClientWith("Connected clients: "+ clientList.size(), clientList.get(0));
-    assertServerResponsesToConnectedClientWith("Connected clients: "+ clientList.size(), clientList.get(1));
+    assertServerResponsesToConnectedClientWith(connectedClientsNotifier.notifyForNewConnection() + clientList.size(), clientList.get(0));
+    assertServerResponsesToConnectedClientWith(connectedClientsNotifier.notifyForNewConnection() + clientList.size(), clientList.get(1));
   }
 
   private void createClients(int numberOfClients) throws IOException, InterruptedException {
-
+    Thread.sleep(50);
     for (int i = 0; i < numberOfClients; i++) {
 
-      Thread.sleep(50);
       Socket socket = new Socket(HOST, PORT);
 
       clientList.add(socket);

@@ -13,6 +13,7 @@ public class Client {
   public UI clientUI;
   private Socket socket;
   private Scanner scanner;
+  private boolean stop = false;
 
 
   public Client(UI clientUI) {
@@ -24,7 +25,7 @@ public class Client {
     socket = new Socket(host, port);
     scanner = new Scanner(socket.getInputStream());
     try {
-      while (socket.isConnected()) {
+      while (!stop) {
         clientUI.displayMessage("\n" + scanner.nextLine());
       }
     } catch (NoSuchElementException e) {
@@ -38,6 +39,7 @@ public class Client {
   }
 
   public void close() throws IOException {
+    stop = true;
     if (socket != null) {
       socket.close();
     }
