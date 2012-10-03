@@ -1,7 +1,11 @@
 package com.clouway.designpatterns.objectpool;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -12,6 +16,7 @@ import static org.junit.Assert.assertThat;
 public class PoolTest {
   private final int CAPACITY = 3;
   private Pool pool;
+  private List<Object> acquiredObjectsList = new ArrayList<Object>();
 
   @Before
   public void setUp() {
@@ -19,20 +24,18 @@ public class PoolTest {
   }
 
   @Test
-  public void numberOfContainedObjectsInPoolCorrespondToInitialCapacity() {
-    assertCurrentPoolCapacityEqualTo(CAPACITY);
+  public void acquireZeroObjects() {
+    assertThat(true, is(acquireObjects(0).isEmpty()));
   }
 
   @Test
-  public void acquireOneObjectFromPool() throws Exception {
-    acquireObjects(1);
-    assertCurrentPoolCapacityEqualTo(CAPACITY - 1);
+  public void acquireOneObject() throws Exception {
+    assertThat(1, is(acquireObjects(1).size()));
   }
 
   @Test
-  public void acquireAllObjectsFromPool() {
-    acquireObjects(CAPACITY);
-    assertCurrentPoolCapacityEqualTo(0);
+  public void acquireAllObjects() {
+    assertThat(CAPACITY, is(acquireObjects(CAPACITY).size()));
   }
 
   @Test(expected = NoAvailableElementsException.class)
@@ -42,25 +45,23 @@ public class PoolTest {
 
   @Test
   public void releaseOneAcquiredObject() {
-    Integer integer = pool.acquire();
-    assertCurrentPoolCapacityEqualTo(CAPACITY - 1);
-
+    Object integer = pool.acquire();
+    assertThat(CAPACITY-1,is(acquireObjects(CAPACITY-1).size()));
     pool.release(integer);
-    assertCurrentPoolCapacityEqualTo(CAPACITY);
+    assertThat(CAPACITY-2,is(acquireObjects(CAPACITY-2).size()));
   }
 
-  @Test (expected = ReleasePoolObjectException.class)
-  public void releaseObjectNotFromPool(){
+  @Test(expected = ReleasePoolObjectException.class)
+  public void releaseObjectNotFromPool() {
     pool.release(new Integer(45865));
   }
 
-  private void assertCurrentPoolCapacityEqualTo(int capacity) {
-    assertThat(capacity, is(pool.getCurrentCapacity()));
-  }
 
-  private void acquireObjects(int count) {
+  private List<Object> acquireObjects(int count) {
+    acquiredObjectsList.clear();
     for (int i = 0; i < count; i++) {
-      pool.acquire();
+      acquiredObjectsList.add(pool.acquire());
     }
+    return acquiredObjectsList;
   }
 }
