@@ -46,9 +46,8 @@ public class PoolTest {
   @Test
   public void releaseOneAcquiredObject() {
     Object integer = pool.acquire();
-    assertThat(CAPACITY-1,is(acquireObjects(CAPACITY-1).size()));
     pool.release(integer);
-    assertThat(CAPACITY-2,is(acquireObjects(CAPACITY-2).size()));
+    assertThat(CAPACITY,is(acquireObjects(CAPACITY).size()));
   }
 
   @Test(expected = ReleasePoolObjectException.class)
