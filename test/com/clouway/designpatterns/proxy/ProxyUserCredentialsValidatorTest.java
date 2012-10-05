@@ -9,24 +9,32 @@ import static org.junit.Assert.assertEquals;
  * @author Grisha Angelov <grisha.angelov@clouway.com>
  */
 public class ProxyUserCredentialsValidatorTest {
+  private CredentialsValidator userCredentialsValidator;
   private CredentialsValidator proxyUserCredentialsValidator;
+  private UserRegister userRegister;
+  private User user;
 
   @Before
   public void setUp() {
-    UserRegister userRegister = new UserRegister();
-    userRegister.registerUser(new ForumUser("Pesho", "123456"));
+    userRegister = new UserRegister();
+    user = new ForumUser("Pesho", "123456");
+    userCredentialsValidator = new UserCredentialsValidator(userRegister);
     proxyUserCredentialsValidator = new ProxyUserCredentialsValidator(userRegister);
   }
 
   @Test
   public void validateRegisteredUser() {
-    User registeredUser = new ForumUser("Pesho", "123456");
-    assertEquals(true, proxyUserCredentialsValidator.validate(registeredUser));
+    userRegister.registerUser(user);
+    assertUserValidation(user, true);
   }
 
   @Test
   public void validateUnregisteredUser() {
-    User unregisteredUser = new ForumUser("Ivan", "asd123");
-    assertEquals(false, proxyUserCredentialsValidator.validate(unregisteredUser));
+    assertUserValidation(user, false);
+  }
+
+  private void assertUserValidation(User user, boolean isValid) {
+    assertEquals(isValid, userCredentialsValidator.validate(user));
+    assertEquals(isValid, proxyUserCredentialsValidator.validate(user));
   }
 }

@@ -5,6 +5,7 @@ package com.clouway.designpatterns.proxy;
  */
 public class ProxyUserCredentialsValidator implements CredentialsValidator {
   private UserRegister userRegister;
+  private UserCredentialsValidator userCredentialsValidator;
 
   public ProxyUserCredentialsValidator(UserRegister userRegister) {
     this.userRegister = userRegister;
@@ -12,7 +13,9 @@ public class ProxyUserCredentialsValidator implements CredentialsValidator {
 
   @Override
   public boolean validate(User user) {
-    UserCredentialsValidator userCredentialsValidator = new UserCredentialsValidator(userRegister);
+    if (userCredentialsValidator == null) {
+      userCredentialsValidator = new UserCredentialsValidator(userRegister);
+    }
     return userCredentialsValidator.validate(user);
   }
 }
