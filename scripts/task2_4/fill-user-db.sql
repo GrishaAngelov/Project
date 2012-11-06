@@ -1,0 +1,15 @@
+create table user (user_id integer not null auto_increment,primary key (user_id), username varchar(20), password varchar(20));
+insert into user values (null,"pesho123","123asd");
+insert into user values (null,"niki89","123456");
+insert into user values (null,"ivan_12","asd234");
+insert into user values (null,"todor_m","asd12333");
+create table contact (contact_id integer not null auto_increment,primary key (contact_id), name varchar(20));
+insert into contact values (null,"Ivan");
+insert into contact values (null,"Georgi");
+insert into contact values (null,"Stoqn");
+insert into contact values (null,"Teodor");
+create table address (address_id integer not null auto_increment,primary key (address_id), street varchar(20), street_number varchar(20));
+insert into address values (null,"Sunny Day","221B");
+insert into address values (null,"Happy Street","154R");
+insert into address values (null,"Green Apple","457A");
+insert into address values (null,"First Street","127F");
