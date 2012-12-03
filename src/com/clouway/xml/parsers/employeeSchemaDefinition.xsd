@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+    <xs:element name="employee_info">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="employee" type="employee" minOccurs="1" maxOccurs="unbounded" />
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:complexType name="employee">
+        <xs:sequence>
+            <xs:element name="firstName" type="xs:string" />
+            <xs:element name="lastName" type="xs:string" />
+            <xs:element name="age" type="xs:integer" />
+            <xs:element name="position" type="xs:string" />
+            <xs:element name="employer" type="employer" minOccurs="1" maxOccurs="unbounded" />
+            <xs:element name="address" type="address" minOccurs="1" maxOccurs="unbounded" />
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="employer">
+        <xs:sequence>
+            <xs:element name="name" type="xs:string" />
+            <xs:element name="startDate" type="xs:date" />
+            <xs:element name="endDate" type="xs:date" />
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="address">
+        <xs:sequence>
+            <xs:element name="street" type="xs:string" />
+            <xs:element name="streetNo" type="xs:integer" />
+            <xs:element name="section" type="xs:integer" />
+            <xs:element name="city" type="xs:string" />
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>
