@@ -7,9 +7,11 @@
     <property name="classes" location="com/clouway/buildtools/ant/classes"/>
 
     <target name="runTests" depends="makeJar">
-        <junit printsummary="on">
-            <test name="com.clouway.buildtools.ant.MyClassTest"/>
+        <junit printsummary="yes">
+            <formatter type="plain"/>
+            <test name="com.clouway.buildtools.ant.MyClassTest" outfile="result" toDir=".."/>
             <classpath>
+                <pathelement location="com/clouway/buildtools/ant/classes"/>
                 <pathelement location="../lib/junit-4.10.jar"/>
             </classpath>
         </junit>
@@ -26,6 +28,7 @@
 
     <target name="compile">
         <javac srcdir="com/clouway/buildtools/ant" destdir="${classes}" includeantruntime="false" classpathref="libPath"/>
+        <javac srcdir="../test/com/clouway/buildtools/ant" destdir="${classes}" includeantruntime="false" classpathref="libPath"/>
     </target>
 
 </project>
