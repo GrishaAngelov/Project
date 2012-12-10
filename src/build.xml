@@ -3,9 +3,9 @@
     <property name="classes" location="./com/clouway/buildtools/ant/classes"/>
 
     <target name="makeJar" depends="compile">
-        <jar destfile="./com/clouway/buildtools/ant/jar/MyLogger.jar" basedir="${classes}" includes="lib">
+        <jar destfile="./com/clouway/buildtools/ant/jar/MyClass.jar" basedir="${classes}" includes="lib">
             <manifest>
-                <attribute name="Main-Class" value="com.clouway.buildtools.ant.MyLogger"/>
+                <attribute name="Main-Class" value="com.clouway.buildtools.ant.MyClass"/>
             </manifest>
         </jar>
     </target>
