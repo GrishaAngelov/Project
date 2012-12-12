@@ -26,9 +26,14 @@
         </jar>
     </target>
 
-    <target name="compile">
+    <target name="compile" depends="init">
         <javac srcdir="com/clouway/buildtools/ant" destdir="${classes}" includeantruntime="false" classpathref="libPath"/>
         <javac srcdir="../test/com/clouway/buildtools/ant" destdir="${classes}" includeantruntime="false" classpathref="libPath"/>
+    </target>
+
+    <target name="init">
+        <delete dir="${classes}"/>
+        <mkdir dir = "${classes}"/>
     </target>
 
 </project>
