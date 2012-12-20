@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+
+<head>
+    <title>Validation Form</title>
+
+    <style>
+        body {
+            background-color: #EEDDBB;
+        }
+
+        h3 {
+            margin-left: 50px;
+        }
+
+        .registrationForm {
+            margin-left: 50px;
+            width: 300px;
+            clear: both;
+        }
+
+        .registrationForm input {
+            width: 100%;
+            clear: both;
+        }
+
+    </style>
+
+    <script>
+        function validateUserInputForm() {
+
+            var inputFields = document.forms[0].getElementsByTagName("input");
+            var labels = document.forms[0].getElementsByTagName("label");
+
+            for (var i = 0; i < inputFields.length; i++) {
+
+                if (inputFields[i].value == "") {
+
+                    labels[i].style.visibility = "visible";
+                } else {
+//                    var isValid = ;
+                    if (validateInput(inputFields[i]) == true) {
+                        labels[i].style.visibility = "hidden";
+                    }
+                }
+            }
+        }
+    </script>
+
+    <script>
+
+        var validationMap = {};
+        validationMap["firstName"] = /^[A-z]{1,15}$/i;
+        validationMap["lastName"] = /^[A-z]{1,15}$/i;
+        validationMap["egn"] = /^[0-9]{10}$/i;
+        validationMap["age"] = /^[[1][8-9]]*$|^[[2-9][0-9]]*$|^[[1][0-1][0-8]]*/i;
+        validationMap["address"] = /^[A-z0-9 _]{1,100}$/i;
+        validationMap["password"] = /^[A-z0-9]{6,18}$/i;
+
+        function validateInput(inputField) {
+
+            var isValid = validationMap[inputField.name].test(inputField.value);
+
+            alert(inputField.name + " is " + isValid);
+
+            return isValid;
+        }
+    </script>
+</head>
+
+<body>
+<h3>Please Fill The Registration Form</h3>
+
+<div class="registrationForm">
+    <form>
+        <span>First Name</span>
+        <input type="text" name="firstName">
+        <label style="visibility:hidden; color:red">*Please Enter First Name</label><br/>
+
+        <span>Last Name</span>
+        <input type="text" name="lastName">
+        <label style="visibility:hidden; color:red">*Please Enter Last Name</label><br/>
+
+        <span>EGN</span>
+        <input type="text" name="egn">
+        <label style="visibility:hidden; color:red">*Please Enter EGN</label><br/>
+
+        <span>Age</span>
+        <input type="text" name="age"><br/>
+        <label style="visibility:hidden; color:red">*Please Enter Age</label><br/>
+
+        <span>Address</span>
+        <input type="text" name="address"><br/>
+        <label style="visibility:hidden; color:red">*Please Enter Address</label><br/>
+
+        <span>Password</span>
+        <input type="password" name="password">
+        <label style="visibility:hidden; color:red">*Please Enter Password</label><br/>
+    </form>
+
+    <button type="button" onClick="validateUserInputForm()">Validate Form</button>
+</div>
+</body>
+
+</html>

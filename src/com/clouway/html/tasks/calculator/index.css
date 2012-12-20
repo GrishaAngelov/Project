@@ -1,0 +1,17 @@
+body {
+    background-color: #EEDDBB;
+}
+
+h1 {
+    text-align: center;
+}
+
+#calcForm {
+    text-align: center;
+}
+
+#calcForm  #buttons {
+    margin-left: 735px;
+    width: 120px;
+    clear: both;
+}

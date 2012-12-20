@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<head xmlns="http://www.w3.org/1999/html">
+    <title>Calculator</title>
+    <link rel="stylesheet" type="text/css" href="index.css">
+</head>
+
+<body>
+<h1>JavaScript Calculator</h1>
+
+<div id="calcForm">
+    <input type="text" name="inputField" style="text-align: right">
+
+    <div id="buttons">
+        <script src="./calculator.js"></script>
+        <!--<button type="button" name="1" onclick="typeCharacter(this.name)">1</button>-->
+        <!--<button type="button" name="2" onclick="typeCharacter(this.name)">2</button>-->
+        <!--<button type="button" name="3" onclick="typeCharacter(this.name)">3</button>-->
+        <!--<button type="button" name="4" onclick="typeCharacter(this.name)">4</button>-->
+        <!--<button type="button" name="5" onclick="typeCharacter(this.name)">5</button>-->
+        <!--<button type="button" name="6" onclick="typeCharacter(this.name)">6</button>-->
+        <!--<button type="button" name="7" onclick="typeCharacter(this.name)">7</button>-->
+        <!--<button type="button" name="8" onclick="typeCharacter(this.name)">8</button>-->
+        <!--<button type="button" name="9" onclick="typeCharacter(this.name)">9</button>-->
+        <!--<button type="button" name="0" onclick="typeCharacter(this.name)">0</button>-->
+        <button type="button" name="+" onclick="numbers(this.name)">+</button>
+        <button type="button" name="-" onclick="numbers(this.name)">-</button>
+        <button type="button" name="*" onclick="numbers(this.name)">*</button>
+        <button type="button" name="/" onclick="numbers(this.name)">/</button>
+        <button type="button" name="." onclick="typeCharacter('.')">.</button>
+        <button type="button" name="clr" onclick="clearAll()">clr</button>
+        <button type="button" name="back" onclick="clearLastDigit()">back</button>
+        <button type="button" name="=" onclick="calculate()">=</button>
+    </div>
+
+</div>
+</body>
+</html>

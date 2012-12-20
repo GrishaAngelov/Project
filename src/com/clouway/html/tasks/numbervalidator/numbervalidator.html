@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<head>
+    <title>Number Validator</title>
+
+    <script>
+        function validateNumberInput() {
+            var number = document.getElementsByTagName("input")[0].value;
+
+            if (/[.|,]/i.test(number)) {
+
+                var decimalSeparatorIndex = getDecimalSeparatorIndex(number);
+                var digitsBeforeSeparator = number.substr(0, decimalSeparatorIndex).length;
+                var digitsAfterSeparator = number.substr(decimalSeparatorIndex + 1, number.length - 1).length;
+
+                if (digitsBeforeSeparator <= 10 && digitsAfterSeparator <= 5) {
+                    document.getElementsByTagName("input")[0].value = "VALID NUMBER";
+                } else {
+                    document.getElementsByTagName("input")[0].value = "NOT VALID NUMBER";
+                }
+            } else {
+                document.getElementsByTagName("input")[0].value = "VALID NUMBER";
+            }
+        }
+
+        function getDecimalSeparatorIndex(number) {
+            var index;
+            for (var i = 0; i < number.length; i++) {
+                if (number.charAt(i) == "." || number.charAt(i) == ",") {
+                    index = i;
+                    break;
+                }
+            }
+            return index;
+        }
+    </script>
+</head>
+
+<body>
+<input type="text" name="numberField">
+<button type="button" name="validateButton" onclick="validateNumberInput()">Validate Number</button>
+</body>
+</html>
